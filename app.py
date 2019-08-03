@@ -6,6 +6,7 @@ app = Flask(__name__)
 db = "나도 몰라 이새끼야"
 cursor = db.cursor()
 
+
 @app.route('/')
 def hello_world():
     cursor.execute("SELECT VERSION()")
