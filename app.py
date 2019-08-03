@@ -7,7 +7,7 @@ db = "나도 몰라 이새끼야"
 cursor = db.cursor()
 
 
-@app.route('/')
+@app.route('/', methods=['get'])
 def hello_world():
     cursor.execute("SELECT VERSION()")
     data = cursor.fetchone()
