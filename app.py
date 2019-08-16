@@ -14,7 +14,7 @@ cursor = db.cursor(pymysql.cursors.DictCursor)
 
 @app.route('/profile/<uuid>', methods=['get'])
 def profile_get(uuid):
-    cursor.execute("SELECT * from user_data where uuid=%s",uuid)
+    cursor.execute("SELECT * from user_data where uuid=%s", uuid)
     data = cursor.fetchall()
     data = data[0]
     data['birthday'] = data['birthday'].strftime('%Y%m%d')
@@ -22,5 +22,5 @@ def profile_get(uuid):
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0",port=7000,ssl_context=context)
+    app.run(host="0.0.0.0", port=7000, ssl_context=context)
 #    app.run(host="0.0.0.0",port=7000)
