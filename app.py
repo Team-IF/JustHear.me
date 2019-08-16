@@ -4,6 +4,7 @@ import pymysql
 import uuid
 import json
 import datetime
+import bcrypt
 
 context = ("/etc/letsencrypt/live/nanobot.tk/fullchain.pem","/etc/letsencrypt/live/nanobot.tk/privkey.pem")
 app = Flask(__name__)
@@ -13,7 +14,7 @@ cursor = db.cursor(pymysql.cursors.DictCursor)
 
 @app.route('/profile/<uuid>', methods=['get'])
 def profile_get(uuid):
-    cursor.execute(f"SELECT * from user_data where uuid='{uuid}'")
+    cursor.execute("SELECT * from user_data where uuid=%s",uuid)
     data = cursor.fetchall()
     data = data[0]
     data['birthday'] = data['birthday'].strftime('%Y%m%d')
@@ -21,4 +22,5 @@ def profile_get(uuid):
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0",port=6000,ssl_context=context)
+    app.run(host="0.0.0.0",port=7000,ssl_context=context)
+#    app.run(host="0.0.0.0",port=7000)
