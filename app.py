@@ -28,7 +28,7 @@ def profile_get(token):
     cursor.execute("SELECT * from user_data where uuid=%s", uuid)
     data = cursor.fetchall()[0]
     data['birthday'] = data['birthday'].strftime('%Y%m%d')
-    del data['uuid']
+    del data['uuid'], data['pass']
     return Response(json.dumps(data), mimetype='application/json; charset=utf-8')
 
 
