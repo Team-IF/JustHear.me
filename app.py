@@ -1,9 +1,8 @@
 #!/usr/bin/env pypy3
-from flask import Flask, Response, request
-import pymysql
-import uuid
 import json
 import bcrypt
+import pymysql
+from flask import Flask, Response, request
 
 context = ('/etc/letsencrypt/live/nanobot.tk/fullchain.pem', "/etc/letsencrypt/live/nanobot.tk/privkey.pem")
 app = Flask(__name__)
