@@ -25,7 +25,7 @@ def on_json_loading_failed_return_dict(e):
 def profile_get(token):
     cursor.execute("SELECT * from sessions where accessToken=%s", token)
     uuid = cursor.fetchall()[0]['uuid']
-    cursor.execute("SELECT * from sessions where uuid=%s", uuid)
+    cursor.execute("SELECT * from user_data where uuid=%s", uuid)
     data = cursor.fetchall()[0]
     data['birthday'] = data['birthday'].strftime('%Y%m%d')
     return Response(json.dumps(data), mimetype='application/json; charset=utf-8')
