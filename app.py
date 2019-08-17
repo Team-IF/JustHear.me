@@ -44,7 +44,7 @@ def login():
             expiredate = datetime.datetime.utcnow()
             expiredate = expiredate + datetime.timedelta(days=14)
             cursor.execute("INSERT INTO sessions (uuid, accessToken, expiredate) VALUES (%s,%s,%s) ", (data['uuid'], newtoken, expiredate))
-            cursor.fetchall()
+            db.commit()
             res = Response()
             res.status_code = 200
             res.data = newtoken
