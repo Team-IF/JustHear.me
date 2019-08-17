@@ -1,6 +1,6 @@
 #!/usr/bin/env pypy3
 import json
-import uuid
+from uuid import uuid4
 import datetime
 import bcrypt
 import pymysql
@@ -21,9 +21,11 @@ def on_json_loading_failed_return_dict(e):
     return {}
 
 
-@app.route('/profile/<uuidd>', methods=['get'])
-def profile_get(uuidd):
-    cursor.execute("SELECT * from user_data where uuid=%s", uuidd)
+@app.route('/profile/<token>', methods=['get'])
+def profile_get(token):
+    cursor.execute("SELECT * from sessions where accessToken=%s", token)
+    uuid = cursor.fetchall()[0]['uuid']
+    cursor.execute("SELECT * from sessions where uuid=%s", uuid)
     data = cursor.fetchall()[0]
     data['birthday'] = data['birthday'].strftime('%Y%m%d')
     return Response(json.dumps(data), mimetype='application/json; charset=utf-8')
@@ -40,7 +42,7 @@ def login():
         cursor.execute("SELECT * from user_data where email=%s", request.json.get('email'))
         data = cursor.fetchall()[0]
         if bcrypt.checkpw(request.json.get('pass').encode('utf-8'), data.get('pass').encode('utf-8')):
-            newtoken = str(uuid.uuid4())
+            newtoken = str(uuid4())
             expiredate = datetime.datetime.utcnow()
             expiredate = expiredate + datetime.timedelta(days=14)
             cursor.execute("INSERT INTO sessions (uuid, accessToken, expiredate) VALUES (%s,%s,%s) ", (data['uuid'], newtoken, expiredate))
@@ -48,6 +50,7 @@ def login():
             res = Response()
             res.status_code = 200
             res.data = newtoken
+            res.mimetype = 'text/plain; charset=utf-8'
             return res
         else:
             res = Response()
