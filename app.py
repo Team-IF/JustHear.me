@@ -43,7 +43,7 @@ def login():
             newtoken = uuid.uuid4()
             expiredate = datetime.datetime.utcnow()
             expiredate = expiredate + datetime.timedelta(days=14)
-            cursor.execute("INSERT INTO sessions (uuid, accessToken, expiredate) VALUES (%s,%s,%s) ", data['uuid'], newtoken, expiredate)
+            cursor.execute("INSERT INTO sessions (uuid, accessToken, expiredate) VALUES (%s,%s,%s) ", (data['uuid'], newtoken, expiredate))
             res = Response()
             res.status_code = 200
             res.data = newtoken
