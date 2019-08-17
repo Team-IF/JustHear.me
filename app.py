@@ -40,7 +40,7 @@ def login():
         cursor.execute("SELECT * from user_data where email=%s", request.json.get('email'))
         data = cursor.fetchall()[0]
         if bcrypt.checkpw(request.json.get('pass').encode('utf-8'), data.get('pass').encode('utf-8')):
-            newtoken = uuid.uuid4()
+            newtoken = str(uuid.uuid4())
             expiredate = datetime.datetime.utcnow()
             expiredate = expiredate + datetime.timedelta(days=14)
             cursor.execute("INSERT INTO sessions (uuid, accessToken, expiredate) VALUES (%s,%s,%s) ", (data['uuid'], newtoken, expiredate))
