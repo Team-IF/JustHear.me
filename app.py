@@ -5,7 +5,7 @@ import uuid
 import json
 import bcrypt
 
-context = ("/etc/letsencrypt/live/nanobot.tk/fullchain.pem", "/etc/letsencrypt/live/nanobot.tk/privkey.pem")
+context = ('/etc/letsencrypt/live/nanobot.tk/fullchain.pem', "/etc/letsencrypt/live/nanobot.tk/privkey.pem")
 app = Flask(__name__)
 db = pymysql.connect(unix_socket="/var/run/mysqld/mysqld.sock", user="hearme", password="dhdh4321", db="hearme",
                      charset="utf8")
@@ -20,9 +20,9 @@ def on_json_loading_failed_return_dict(e):
     return {}
 
 
-@app.route('/profile/<uuid>', methods=['get'])
-def profile_get(uuid):
-    cursor.execute("SELECT * from user_data where uuid=%s", uuid)
+@app.route('/profile/<uuidd>', methods=['get'])
+def profile_get(uuidd):
+    cursor.execute("SELECT * from user_data where uuid=%s", uuidd)
     data = cursor.fetchall()[0]
     data['birthday'] = data['birthday'].strftime('%Y%m%d')
     return Response(json.dumps(data), mimetype='application/json; charset=utf-8')
