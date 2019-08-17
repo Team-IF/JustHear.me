@@ -34,7 +34,7 @@ def login():
     else:
         cursor.execute("SELECT * from user_data where email=%s",request.json.get('email'))
         data = cursor.fetchall()[0]
-        if bcrypt.checkpw(request.json.get('pass').encode('utf-8'),data.get['pass']):
+        if bcrypt.checkpw(request.json.get('pass').encode('utf-8'),data.get('pass')):
             res = Response()
             res.status_code = 200
             res.data = data['uuid']
