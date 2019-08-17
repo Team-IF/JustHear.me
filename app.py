@@ -12,6 +12,10 @@ db = pymysql.connect(unix_socket="/var/run/mysqld/mysqld.sock", user="hearme", p
 cursor = db.cursor(pymysql.cursors.DictCursor)
 
 
+def hashpw(password: str) -> str:
+    return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt(10)).decode("utf-8")
+
+
 def on_json_loading_failed_return_dict(e):
     return {}
 
@@ -32,9 +36,9 @@ def login():
         res.status_code = 400
         return res
     else:
-        cursor.execute("SELECT * from user_data where email=%s",request.json.get('email'))
+        cursor.execute("SELECT * from user_data where email=%s", request.json.get('email'))
         data = cursor.fetchall()[0]
-        if bcrypt.checkpw(request.json.get('pass').encode('utf-8'),data.get('pass').encode('utf-8')):
+        if bcrypt.checkpw(request.json.get('pass').encode('utf-8'), data.get('pass').encode('utf-8')):
             res = Response()
             res.status_code = 200
             res.data = data['uuid']
@@ -43,6 +47,7 @@ def login():
             res = Response()
             res.status_code = 403
             return res
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=7000, ssl_context=context)
