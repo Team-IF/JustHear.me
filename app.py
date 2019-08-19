@@ -69,9 +69,19 @@ def login():
 
 
 @app.route('/login/<token>', methods=['DELETE'])
-def invalidate_token(token: str):
-    cursor.execute("DELETE FROM sessions WHERE accessToken=%s", token)
-    db.commit()
+def invalidate_token(token: str) -> Response:
+    cursor.execute("SELECT FROM sessions WHERE accessToken=%s", token)
+    data = cursor.fetchall()
+    if data == tuple():
+        res = Response()
+        res.status_code = 404
+        return res
+    else:
+        cursor.execute("DELETE FROM sessions WHERE accessToken=%s", token)
+        db.commit()
+        res = Response()
+        res.status_code = 204
+        return res
 
 
 if __name__ == '__main__':
