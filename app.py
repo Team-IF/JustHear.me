@@ -1,7 +1,8 @@
 #!/usr/bin/env pypy3
+import datetime
 import json
 from uuid import uuid4
-import datetime
+
 import bcrypt
 import pymysql
 from flask import Flask, Response, request
@@ -11,6 +12,15 @@ app = Flask(__name__)
 db = pymysql.connect(unix_socket="/var/run/mysqld/mysqld.sock", user="hearme", password="dhdh4321", db="hearme",
                      charset="utf8")
 cursor = db.cursor(pymysql.cursors.DictCursor)
+
+
+def token2uuid(token: str) -> str:
+    cursor.execute("SELECT * from sessions where accessToken=%s", token)
+    uuid = cursor.fetchall()[0]['uuid']
+    expiredate = datetime.datetime.utcnow() + datetime.timedelta(days=14)
+    cursor.execute("UPDATE 'sessions' SET expiredate=%s WHERE accessToken=%s", (expiredate, token))
+    db.commit()
+    return uuid
 
 
 def hashpw(password: str) -> str:
@@ -23,8 +33,7 @@ def on_json_loading_failed_return_dict(e):
 
 @app.route('/profile/<token>', methods=['get'])
 def profile_get(token):
-    cursor.execute("SELECT * from sessions where accessToken=%s", token)
-    uuid = cursor.fetchall()[0]['uuid']
+    uuid = token2uuid(token)
     cursor.execute("SELECT * from user_data where uuid=%s", uuid)
     data = cursor.fetchall()[0]
     data['birthday'] = data['birthday'].strftime('%Y%m%d')
