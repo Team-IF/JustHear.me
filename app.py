@@ -68,6 +68,12 @@ def login():
             return res
 
 
+@app.route('/login/<token>', methods=['DELETE'])
+def invalidate_token(token: str):
+    cursor.execute("DELETE FROM sessions WHERE accessToken=%s", token)
+    db.commit()
+
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=7000, ssl_context=context)
 #    app.run(host="0.0.0.0",port=7000)
