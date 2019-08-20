@@ -27,22 +27,48 @@ def hashpw(password: str) -> str:
     return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt(10)).decode("utf-8")
 
 
-def on_json_loading_failed_return_dict(e):
+def on_json_loading_failed_return_dict(e) -> dict:
     return {}
 
 
 @app.route('/profile/<token>', methods=['get'])
-def profile_get(token):
+def profile_get(token: str) -> Response:
     uuid = token2uuid(token)
     cursor.execute("SELECT * from user_data where uuid=%s", uuid)
     data = cursor.fetchall()[0]
-    data['birthday'] = data['birthday'].strftime('%Y%m%d')
+    data['birthday'] = data['birthday'].strftime('%Y-%m-%d')
+    del data['uuid'], data['pass']
+    return Response(json.dumps(data), mimetype='application/json; charset=utf-8')
+
+
+@app.route('/profile/<token>', methods=['put'])
+def profile_edit(token: str) -> Response:
+    uuid = token2uuid(token)
+    request.on_json_loading_failed = on_json_loading_failed_return_dict
+    args = dict(request.json)
+    if 'username' in args:
+        pass
+    if 'email' in args:
+        pass
+    if 'phonenumber' in args:
+        pass
+    if 'birthday' in args:
+        pass
+    if 'gender' in args:
+        pass
+    if 'profileImg' in args:
+        pass
+    if 'profileMusic' in args:
+        pass
+    cursor.execute("SELECT * from user_data where uuid=%s", uuid)
+    data = cursor.fetchall()[0]
+    data['birthday'] = data['birthday'].strftime('%Y-%m-%d')
     del data['uuid'], data['pass']
     return Response(json.dumps(data), mimetype='application/json; charset=utf-8')
 
 
 @app.route('/login', methods=['post'])
-def login():
+def login() -> Response:
     request.on_json_loading_failed = on_json_loading_failed_return_dict
     if request.json.get('email') is None or request.json.get('pass') is None:
         res = Response()
