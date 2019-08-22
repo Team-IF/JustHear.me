@@ -7,17 +7,19 @@ from uuid import uuid4
 import bcrypt
 import pymysql
 from flask import Flask, Response, request
-import JsonResponse
+
+from JsonResponse import JsonResponse
 
 context = ('/etc/letsencrypt/live/nanobot.tk/fullchain.pem', "/etc/letsencrypt/live/nanobot.tk/privkey.pem")
 app = Flask(__name__)
 app.debug = True  # ONLY TO DEBUG #
-app.response_class = JsonResponse.JsonResponse
-db = pymysql.connect(host="nanobot.tk", port=23307, user="ifteam", password="dhdh4321", db="hearme", charset="utf8")
-#db = pymysql.connect(unix_socket="/var/run/mysqld/mysqld.sock", user="hearme", password="dhdh4321", db="hearme", charset="utf8")
+app.response_class = JsonResponse
+db = pymysql.connect(unix_socket="/var/run/mysqld/mysqld.sock", user="hearme", password="dhdh4321", db="hearme",
+                     charset="utf8")
 cursor = db.cursor(pymysql.cursors.DictCursor)
 
 x_access_token = "x-access-token"
+
 
 # token to uuid
 # TODO : check client ip and compare with db
