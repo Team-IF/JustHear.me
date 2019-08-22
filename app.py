@@ -111,7 +111,7 @@ def login() -> Response:
     try:
         req = json.loads(request.data)
         if not req.get('email') or not req.get("pw"):
-            return rerror("이메일과 비밀번호를 입력해 주세요.", 500)
+            return rerror("이메일과 비밀번호를 입력해 주세요.", 400)
 
         cursor.execute("SELECT * from user_data where email=%s", request.json.get('email'))
         fetchs = cursor.fetchall()
@@ -126,11 +126,10 @@ def login() -> Response:
             expiredate = expiredate + datetime.timedelta(days=14)
             cursor.execute("INSERT INTO sessions (uuid, accessToken, expiredate) VALUES (%s,%s,%s) ", (data['uuid'], newtoken, expiredate))
             db.commit()
-
-            return {
+            return JsonResponse(json.dumps({
                 'token': newtoken,
                 'uuid': data['uuid']
-            }
+            }))
         else:
             return rerror("잘못된 이메일/비밀번호", 403)
 
