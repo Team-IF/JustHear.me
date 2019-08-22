@@ -74,9 +74,9 @@ def profile_edit(uuid: str) -> Response:
         token = request.headers[x_access_token]
 
         if not token:
-            rerror("로그인을 해주세요.", 401)
+            return rerror("로그인을 해주세요.", 401)
         if uuid != token2uuid(token):
-            rerror("자신의 프로필만 수정할 수 있습니다.", 403)
+            return rerror("자신의 프로필만 수정할 수 있습니다.", 403)
 
         args = json.loads(request.data)
         if 'username' in args:
