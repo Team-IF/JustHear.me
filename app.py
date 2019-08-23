@@ -21,7 +21,7 @@ cursor = db.cursor(pymysql.cursors.DictCursor)
 x_access_token = "x-access-token"
 
 
-@app.route('/echo')
+@app.route('/echo', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def echo():
     return request.data.decode("utf-8")
 
