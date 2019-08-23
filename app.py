@@ -80,7 +80,7 @@ def profile_edit(uuid: str) -> Response:
         if uuid != token2uuid(token):
             return rerror("자신의 프로필만 수정할 수 있습니다.", 403)
 
-        args = json.loads(request.data)
+        args = json.loads(request.data.decode("utf-8"))
         if 'username' in args:
             pass
         if 'email' in args:
@@ -109,7 +109,7 @@ def profile_edit(uuid: str) -> Response:
 @app.route('/login', methods=['post'])
 def login() -> Response:
     try:
-        req = json.loads(request.data)
+        req = json.loads(request.data.decode("utf-8"))
         if not req.get('email') or not req.get("pw"):
             return rerror("이메일과 비밀번호를 입력해 주세요.", 400)
 
