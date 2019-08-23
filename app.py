@@ -115,26 +115,29 @@ def profile_edit(uuid: str) -> Response:
 def login() -> Response:
     try:
         req = json.loads(request.data.decode("utf-8"))
-        if not req.get('email') or not req.get("pw"):
+        email = req.get('email')
+        pw = req.get('pass')
+
+        if not email or not pw:
             return rerror("이메일과 비밀번호를 입력해 주세요.", 400)
 
-        cursor.execute("SELECT * from user_data where email=%s", request.json.get('email'))
+        cursor.execute("SELECT * from user_data where email=%s", email)
         fetchs = cursor.fetchall()
 
         if not fetchs or len(fetchs) == 0:
             return rerror("잘못된 이메일/비밀번호", 403)
 
         data = fetchs[0]
-        if bcrypt.checkpw(request.json.get('pass').encode('utf-8'), data.get('pass').encode('utf-8')):
+        if bcrypt.checkpw(pw.encode('utf-8'), data.get('pass').encode('utf-8')):
             newtoken = str(uuid4())
             expiredate = datetime.datetime.utcnow()
             expiredate = expiredate + datetime.timedelta(days=14)
             cursor.execute("INSERT INTO sessions (uuid, accessToken, expiredate) VALUES (%s,%s,%s) ", (data['uuid'], newtoken, expiredate))
             db.commit()
-            return JsonResponse(json.dumps({
+            return {
                 'token': newtoken,
                 'uuid': data['uuid']
-            }))
+            }
         else:
             return rerror("잘못된 이메일/비밀번호", 403)
 
