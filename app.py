@@ -21,6 +21,11 @@ cursor = db.cursor(pymysql.cursors.DictCursor)
 x_access_token = "x-access-token"
 
 
+@app.route('/echo')
+def echo():
+    return request.data.decode("utf-8")
+
+
 # token to uuid
 # TODO : check client ip and compare with db
 # TODO : change token format to more random string
