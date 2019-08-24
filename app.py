@@ -84,8 +84,7 @@ def profile_edit(uuid: str) -> Response:
             return rerror("로그인을 해주세요.", 401)
         if uuid != token2uuid(token):
             return rerror("자신의 프로필만 수정할 수 있습니다.", 403)
-
-        args = json.loads(request.data.decode("utf-8"))
+        args = request.json
         if 'username' in args:
             pass
         if 'email' in args:
@@ -114,7 +113,7 @@ def profile_edit(uuid: str) -> Response:
 @app.route('/login', methods=['post'])
 def login() -> Response:
     try:
-        req = json.loads(request.data.decode("utf-8"))
+        req = request.json
         email = req.get('email')
         pw = req.get('pass')
 
@@ -134,10 +133,10 @@ def login() -> Response:
             expiredate = expiredate + datetime.timedelta(days=14)
             cursor.execute("INSERT INTO sessions (uuid, accessToken, expiredate) VALUES (%s,%s,%s) ", (data['uuid'], newtoken, expiredate))
             db.commit()
-            return {
+            return JsonResponse({
                 'token': newtoken,
                 'uuid': data['uuid']
-            }
+            })
         else:
             return rerror("잘못된 이메일/비밀번호", 403)
 
