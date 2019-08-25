@@ -1,1 +1,1 @@
-__all__ = ['JsonResponse', 'app', 'auth', 'profile', 'test']
+__all__ = ['JsonResponse', 'app', 'files', 'auth', 'profile', 'test']

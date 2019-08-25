@@ -5,12 +5,15 @@ import pymysql
 from flask import Flask
 from . import *
 
+SSL = True
+
 app = Flask(__name__)
 app.debug = True  # ONLY TO DEBUG #
 app.response_class = JsonResponse
 context = ('/etc/letsencrypt/live/nanobot.tk/fullchain.pem', "/etc/letsencrypt/live/nanobot.tk/privkey.pem")
 
 app.register_blueprint(auth)
+app.register_blueprint(files)
 app.register_blueprint(profile)
 app.register_blueprint(test)
 
