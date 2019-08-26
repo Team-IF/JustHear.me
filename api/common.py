@@ -5,7 +5,7 @@ import json
 SSL = True
 
 def rerror(ex, status_code=400):  # response error
-    r = JsonResponse()
+    r = JsonResponse.JsonResponse()
     r.status_code = status_code
     ex_type = type(ex)
 

@@ -7,7 +7,7 @@ import json
 import pymysql
 from flask import Flask
 from api import *
-import JsonResponse
+from JsonResponse import JsonResponse
 
 print("Initialize Flask")
 
@@ -17,10 +17,10 @@ app.response_class = JsonResponse
 context = ('/etc/letsencrypt/live/nanobot.tk/fullchain.pem', "/etc/letsencrypt/live/nanobot.tk/privkey.pem")
 common.SSL = True
 
-app.register_blueprint(auth.auth)
-app.register_blueprint(files.files)
-app.register_blueprint(profile.profile)
-app.register_blueprint(test.test)
+app.register_blueprint(auth.auth, url_prefix='/auth')
+app.register_blueprint(files.files, url_prefix='/files')
+app.register_blueprint(profile.profile, url_prefix='/profile')
+app.register_blueprint(test.test, url_prefix='/test')
 
 print("Connect DB")
 
