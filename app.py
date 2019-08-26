@@ -1,6 +1,7 @@
 #!/usr/bin/env pypy3
 # -- coding: utf-8 --
 
+print(__name__)
 print("import modules")
 
 import json
@@ -15,6 +16,7 @@ app = Flask(__name__)
 app.debug = True  # ONLY TO DEBUG #
 app.response_class = JsonResponse
 context = ('/etc/letsencrypt/live/nanobot.tk/fullchain.pem', "/etc/letsencrypt/live/nanobot.tk/privkey.pem")
+common.SSL = True
 
 app.register_blueprint(auth.auth)
 app.register_blueprint(files.files)
