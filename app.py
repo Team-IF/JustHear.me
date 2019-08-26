@@ -1,7 +1,6 @@
 #!/usr/bin/env pypy3
 # -- coding: utf-8 --
 
-print(__name__)
 print("import modules")
 
 import json
@@ -32,5 +31,5 @@ cursor = db.cursor(pymysql.cursors.DictCursor)
 print("Start Server")
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=7000, ssl_context=context)
+    app.run(host="0.0.0.0", port=7000, ssl_context=context, use_reloader=False)
 #    app.run(host="0.0.0.0",port=7000)
