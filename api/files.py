@@ -9,17 +9,22 @@ from api import common
 
 files = Blueprint('files', __name__)
 
-root_storage = os.path.abspath('~/files')
-temp_storage = os.path.abspath('~/files/temp')
+root_storage = os.path.expanduser('~/files')
+temp_storage = os.path.expanduser('~/files/temp')
 serv_storage = 'files'
 
+if not os.path.isdir(root_storage):
+    os.mkdir(root_storage)
+if not os.path.isdir(temp_storage):
+    os.mkdir(temp_storage)
 
-@files.route('/uploads', methods=['POST'])
+
+@files.route('/', methods=['POST'])
 def upload():
     try:
         file = request.files['file']
 
-        temp_path = safe_join(temp_storage, random.randint(10000, 99999))
+        temp_path = safe_join(temp_storage, str(random.randint(10000, 99999)))
         file.save(temp_path)
 
         hash = hashlib.sha1(file).hexdigest()
@@ -43,6 +48,6 @@ def upload():
         return common.rerror(e, 500)
 
 
-@files.route('/uploads/<hash>', methods=['GET'])
+@files.route('/<hash>', methods=['GET'])
 def download(hash):
     return send_from_directory(root_storage, hash)
