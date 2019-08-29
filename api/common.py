@@ -10,10 +10,10 @@ def rerror(ex, status_code=400):  # response error
     ex_type = type(ex)
 
     if ex_type == Exception:
-        name = ex_type.__name__,
+        name = ex_type.__name__
         msg = str(ex)
     elif ex_type == str:
-        name = "ValueError",
+        name = "ValueError"
         msg = ex
     else:
         raise ValueError("'ex' argument must be 'str' or 'Exception'")
