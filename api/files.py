@@ -19,26 +19,29 @@ if not os.path.isdir(temp_storage):
     os.mkdir(temp_storage)
 
 
-@files.route('/', methods=['POST'])
-def upload():
+@files.route('/<hash_path>', methods=['POST'])
+def upload(hash_path):
     try:
-        file = request.files['file']
+        file_path = safe_join(root_storage, hash_path)
 
-        temp_path = safe_join(temp_storage, str(random.randint(10000, 99999)))
-        file.save(temp_path)
+        if not os.path.exists(file_path):
+            file = request.files['file']
 
-        hash = hashlib.sha1(file).hexdigest()
-        file_path = safe_join(root_storage + '/' + hash)
+            temp_path = safe_join(temp_storage, str(random.randint(10000, 99999)))
+            file.save(temp_path)
 
-        shutil.move(temp_path, file_path)
+            hash_path = hashlib.sha1(file).hexdigest()
+            file_path = safe_join(root_storage + '/' + hash_path)
+
+            shutil.move(temp_path, file_path)
 
         url = ""
-        if app.SSL:
+        if common.SSL:
             url += "https://"
         else:
             url += "http://"
 
-        url += safe_join(request.headers['host'], serv_storage, hash)
+        url += safe_join(request.headers['host'], serv_storage, hash_path)
         return url
 
     except KeyError as e:
@@ -50,4 +53,9 @@ def upload():
 
 @files.route('/<hash>', methods=['GET'])
 def download(hash):
-    return send_from_directory(root_storage, hash)
+    path = safe_join(root_storage, hash)
+    if os.path.exists(path):
+        return send_from_directory(root_storage, hash)
+    else:
+        return common.rerror("No such file", 404)
+
