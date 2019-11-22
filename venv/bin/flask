@@ -1,5 +1,4 @@
-#!/root/JustHear.me/venv/bin/python3.8
-
+#!/home/doohee/PycharmProjects/JustHear.me/venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys

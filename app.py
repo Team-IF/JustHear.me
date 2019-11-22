@@ -3,11 +3,11 @@
 
 print("import modules")
 
-import json
 import pymysql
 from flask import Flask
-from api import *
+
 from JsonResponse import JsonResponse
+from api import *
 
 print("Initialize Flask")
 
