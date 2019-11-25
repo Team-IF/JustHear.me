@@ -45,7 +45,7 @@ def login():
     except Exception as e:
         return app.rerror(e, 500)
 
-@auth.routu('/register', methods=['POST'])
+@auth.route('/register', methods=['POST'])
 def register():
     try:
         if not request.is_json:
