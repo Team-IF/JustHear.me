@@ -5,10 +5,12 @@ import datetime
 from uuid import uuid4
 import JsonResponse
 from api import common
+import re 
 
 # authicate user
 
 auth = Blueprint('auth', __name__)
+emailregex = re.compile('^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$')
 
 # LOGIN
 # TODO : check email and pw validation
@@ -52,6 +54,10 @@ def register():
             return app.rerror("invalid json", 400)
         
         req = request.json
+        if not emailregex.search(req.get('email')):
+            return app.rerror("invalid email",400)
+        
+        
     except Exception as e:
         return app.rerror(e, 500)
 
