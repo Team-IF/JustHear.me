@@ -64,11 +64,7 @@ def register():
         password = hashpw(password)
         phone = req.get('phone')
         values = (uuid,username,email,password,phone)
-
-        try:
-            app.cursor.execute("INSERT INTO `hearme`.`user_data` (`uuid`, `username`, `email`, `pass`, `phonenumber`) VALUES (%s,%s,%s,%s,%s) ", values)
-        except Exception as e:
-            return app.rerror(e, 500)
+        app.cursor.execute("INSERT INTO `hearme`.`user_data` (`uuid`, `username`, `email`, `pass`, `phonenumber`) VALUES (%s,%s,%s,%s,%s) ", values)
             #선택적 정보 넣는건 일단 이거 돌아 가긴 하는지 보고 수정할께요 엉엉엉 테스트를 못하겠어
 
     except Exception as e:
