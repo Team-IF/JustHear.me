@@ -57,7 +57,7 @@ def register():
         if not emailregex.search(req.get('email')):
             return app.rerror("invalid email",400)
 
-        uuid = uuid4()
+        uuid = str(uuid4())
         username = req.get('username')
         email = req.get('email')
         password = req.get('pass')
