@@ -5,7 +5,7 @@ import datetime
 from uuid import uuid4
 import JsonResponse
 from api import common
-import re 
+import re
 
 # authicate user
 
@@ -52,12 +52,25 @@ def register():
     try:
         if not request.is_json:
             return app.rerror("invalid json", 400)
-        
+
         req = request.json
         if not emailregex.search(req.get('email')):
             return app.rerror("invalid email",400)
-        
-        
+
+        uuid = uuid4()
+        username = req.get('username')
+        email = req.get('email')
+        password = req.get('pass')
+        password = hashpw(password)
+        phone = req.get('phone')
+        values = (uuid,username,email,password,phone)
+
+        try:
+            app.cursor.execute("INSERT INTO `hearme`.`user_data` (`uuid`, `username`, `email`, `pass`, `phonenumber`) VALUES (%s,%s,%s,%s,%s) ", values)
+        except Exception as e:
+            return app.rerror(e, 500)
+            #선택적 정보 넣는건 일단 이거 돌아 가긴 하는지 보고 수정할께요 엉엉엉 테스트를 못하겠어
+
     except Exception as e:
         return app.rerror(e, 500)
 
