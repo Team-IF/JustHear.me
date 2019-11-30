@@ -22,12 +22,6 @@ app.register_blueprint(files.files, url_prefix='/files')
 app.register_blueprint(profile.profile, url_prefix='/profile')
 app.register_blueprint(test.test, url_prefix='/test')
 
-print("Connect DB")
-
-db = pymysql.connect(unix_socket="/var/run/mysqld/mysqld.sock", user="hearme", password="dhdh4321", db="hearme",
-                     charset="utf8")
-cursor = db.cursor(pymysql.cursors.DictCursor)
-
 print("Start Server")
 
 if __name__ == '__main__':

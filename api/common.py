@@ -1,7 +1,8 @@
 # -- coding: utf-8 --
 import JsonResponse
 import json
-
+import traceback
+import pymysql
 SSL = True
 
 def rerror(ex, status_code=400):  # response error
@@ -16,10 +17,17 @@ def rerror(ex, status_code=400):  # response error
         msg = ex
     else:
         raise ValueError("'ex' argument must be 'str' or 'Exception'")
-
+    traceback.print_exc()
     r.data = json.dumps({
         'error': name,
         'message': msg
     })
     return r
+
+
+print("Connect DB")
+
+db = pymysql.connect(unix_socket="/var/run/mysqld/mysqld.sock", user="hearme", password="dhdh4321", db="hearme",
+                     charset="utf8")
+cursor = db.cursor(pymysql.cursors.DictCursor)
 
