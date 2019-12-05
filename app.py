@@ -1,7 +1,7 @@
 #!/usr/bin/env python3.8
 # -- coding: utf-8 --
 
-print("import modules")
+print("importing modules...")
 
 import pymysql
 from flask import Flask
@@ -9,7 +9,7 @@ from flask import Flask
 from JsonResponse import JsonResponse
 from api import *
 
-print("Initialize Flask")
+print("Initializing Flask...")
 
 app = Flask(__name__)
 app.debug = True  # ONLY TO DEBUG #
