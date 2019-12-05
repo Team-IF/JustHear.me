@@ -1,0 +1,5 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="All in test-auth" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" path="$PROJECT_DIR$/test-auth.http">
+    <method v="2" />
+  </configuration>
+</component>

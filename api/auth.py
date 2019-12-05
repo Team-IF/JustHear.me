@@ -1,15 +1,19 @@
-from flask import Blueprint, request, Response
-import json
-import bcrypt
 import datetime
-from uuid import uuid4
-import JsonResponse
-from api import common
+import json
 import re
+from uuid import uuid4
+
+import bcrypt
+from flask import Blueprint, request, Response
+
+from JsonResponse import JsonResponse
+from api import common
+
 # authicate user
 
 auth = Blueprint('auth', __name__)
-emailregex = re.compile('^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$')
+emailregex = re.compile('^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$')
+
 
 # LOGIN
 # TODO : check email and pw validation
@@ -20,7 +24,7 @@ def login():
             return common.rerror("invalid json", 400)
 
         req = request.json
-        if not req.get('email') or not req.get("pw"):
+        if not req.get('email') or not req.get("pass"):
             return common.rerror("이메일과 비밀번호를 입력해 주세요.", 400)
 
         common.cursor.execute("SELECT * from user_data where email=%s", request.json.get('email'))
