@@ -27,18 +27,19 @@ def login():
         if not req.get('email') or not req.get("pass"):
             return common.rerror("이메일과 비밀번호를 입력해 주세요.", 400)
 
-        common.cursor.execute("SELECT * from user_data where email=%s", request.json.get('email'))
+        common.cursor.execute("SELECT * from user_data where email=%s", req.get('email'))
         fetchs = common.cursor.fetchall()
 
         if not fetchs or len(fetchs) == 0:
             return common.rerror("잘못된 이메일/비밀번호", 403)
 
         data = fetchs[0]
-        if bcrypt.checkpw(request.json.get('pass').encode('utf-8'), data.get('pass').encode('utf-8')):
+        if bcrypt.checkpw(req.get('pass').encode('utf-8'), data.get('pass').encode('utf-8')):
             newtoken = str(uuid4())
             expiredate = datetime.datetime.utcnow()
             expiredate = expiredate + datetime.timedelta(days=14)
-            common.cursor.execute("INSERT INTO sessions (uuid, accessToken, expiredate) VALUES (%s,%s,%s) ", (data['uuid'], newtoken, expiredate))
+            common.cursor.execute("INSERT INTO sessions (uuid, accessToken, expiredate) VALUES (%s,%s,%s) ",
+                                  (data['uuid'], newtoken, expiredate))
             common.db.commit()
             return JsonResponse(json.dumps({
                 'token': newtoken,
@@ -74,7 +75,7 @@ def register():
             return Response(status=204)
         except Exception as e:
             return common.rerror(e, 500)
-            #선택적 정보 넣는건 일단 이거 돌아 가긴 하는지 보고 수정할께요 엉엉엉 테스트를 못하겠어
+            # TODO : 선택적 정보 입력받기
 
     except Exception as e:
         return common.rerror(e, 500)
