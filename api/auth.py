@@ -9,7 +9,7 @@ from flask import Blueprint, request, Response
 from JsonResponse import JsonResponse
 from api import common
 
-# authicate user
+# authenticate user
 
 auth = Blueprint('auth', __name__)
 emailregex = re.compile('^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$')
