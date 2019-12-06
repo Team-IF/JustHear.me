@@ -5,7 +5,7 @@
       <paths name="teamif">
         <serverdata>
           <mappings>
-            <mapping deploy="JustHear.me" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/JustHear.me" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>

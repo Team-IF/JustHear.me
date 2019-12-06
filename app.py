@@ -3,7 +3,6 @@
 
 print("importing modules...")
 
-import pymysql
 from flask import Flask
 
 from JsonResponse import JsonResponse
