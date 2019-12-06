@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="teamif" uploadOnCheckin="b5820c54-29dd-48e1-8fe6-a672e01a3558">
+  <component name="PublishConfigData" autoUpload="Always" serverName="teamif" uploadOnCheckin="b5820c54-29dd-48e1-8fe6-a672e01a3558" exclude=".svn;.cvs;.idea;.DS_Store;.git;.hg;*.hprof;*.pyc;*.http">
     <serverData>
       <paths name="teamif">
         <serverdata>
