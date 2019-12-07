@@ -7,3 +7,24 @@ Content-Type: application/json
 }
 
 ###
+POST https://teamif.io:7000/auth/register
+Content-Type: application/json
+
+{
+  "email": "assdf@naver.com",
+  "pass": "asdf",
+  "username": "asdfasdf"
+}
+
+###
+POST https://teamif.io:7000/auth/register
+Content-Type: application/json
+
+{
+  "email": "asdf@naver.com",
+  "pass": "asdf",
+  "username": "asdfasdf",
+  "phonenumber": "+821011112222"
+}
+
+###
