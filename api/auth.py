@@ -3,6 +3,7 @@ import re
 from uuid import uuid4
 
 import bcrypt
+import pymysql
 from flask import Blueprint, request, Response
 
 from JsonResponse import JsonResponse
@@ -71,13 +72,15 @@ def register() -> JsonResponse:
         values = (uuid,req.get('username'),req.get('email'),hashpw(req.get('pass')),req.get('phonenumber'),req.get('birthday'),req.get('gender'),req.get('profileImg'),req.get('profileMusic'))
 
         try:
-            common.cursor.execute("INSERT INTO `hearme`.`user_data` (`uuid`, `username`, `email`, `pass`, `phonenumber`, `birthday`, `gender`, `profileImg`, `profileMusic`) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s) ", values)
+            common.cursor.execute(
+                "INSERT INTO `hearme`.`user_data` (`uuid`, `username`, `email`, `pass`, `phonenumber`, `birthday`, `gender`, `profileImg`, `profileMusic`) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s) ",
+                values)
             common.db.commit()
             return Response(status=204)
-
-        except Exception as e:
+        except pymysql.IntegrityError as e:
             if 'user_data_email_uindex' in str(e):
                 return common.rerror('email is duplicated', 400)
+        except Exception as e:
             return common.rerror(e, 500)
 
     except Exception as e:
