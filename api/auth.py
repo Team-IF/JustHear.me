@@ -1,5 +1,4 @@
 import datetime
-import json
 import re
 from uuid import uuid4
 
@@ -41,10 +40,10 @@ def login() -> JsonResponse:
             common.cursor.execute("INSERT INTO sessions (uuid, accessToken, expiredate) VALUES (%s,%s,%s) ",
                                   (data['uuid'], newtoken, expiredate))
             common.db.commit()
-            return JsonResponse(json.dumps({
+            return JsonResponse({
                 'token': newtoken,
                 'uuid': data['uuid']
-            }))
+            })
         else:
             return common.rerror("잘못된 이메일/비밀번호", 403)
 
