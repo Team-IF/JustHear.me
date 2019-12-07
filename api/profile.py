@@ -1,5 +1,3 @@
-import json
-
 from flask import Blueprint, request
 
 from JsonResponse import JsonResponse
@@ -28,7 +26,7 @@ def get_profile(uuid: str) -> JsonResponse:
 def profile_get(uuid: str) -> JsonResponse:
     try:
         p = get_profile(uuid)
-        return json.dumps(p)
+        return JsonResponse(p)
 
     except ValueError as e:  # can't find user
         return common.rerror(e, 404)
