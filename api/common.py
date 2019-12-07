@@ -1,11 +1,15 @@
 # -- coding: utf-8 --
-import JsonResponse
 import json
 import traceback
+
 import pymysql
+
+import JsonResponse
+
 SSL = True
 
-def rerror(ex, status_code=400):  # response error
+
+def rerror(ex, status_code: int = 400) -> JsonResponse:  # response error
     r = JsonResponse.JsonResponse()
     r.status_code = status_code
 

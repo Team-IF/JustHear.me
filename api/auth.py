@@ -18,7 +18,7 @@ emailregex = re.compile('^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$')
 # LOGIN
 # TODO : check email and pw validation
 @auth.route('/login', methods=['post'])
-def login():
+def login() -> JsonResponse:
     try:
         if not request.is_json:
             return common.rerror("invalid json", 400)
@@ -51,15 +51,16 @@ def login():
     except Exception as e:
         return common.rerror(e, 500)
 
+
 @auth.route('/register', methods=['POST'])
-def register():
+def register() -> JsonResponse:
     try:
         if not request.is_json:
             return common.rerror("invalid json", 400)
 
         req = request.json
         if not emailregex.search(req.get('email')):
-            return common.rerror("invalid email",400)
+            return common.rerror("invalid email", 400)
 
         uuid = str(uuid4())
         username = req.get('username')
@@ -82,7 +83,7 @@ def register():
 
 # delete login token
 @auth.route('/login', methods=['DELETE'])
-def invalidate_token():
+def invalidate_token() -> Response:
     try:
         token = request.headers['x_access_token']
 

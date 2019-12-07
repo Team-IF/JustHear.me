@@ -1,8 +1,10 @@
-from flask import Blueprint, request, send_from_directory, safe_join
-import random
 import hashlib
-import shutil
 import os
+import random
+import shutil
+
+from flask import Blueprint, request, send_from_directory, safe_join
+
 from api import common
 
 # upload files and download files
@@ -20,7 +22,7 @@ if not os.path.isdir(temp_storage):
 
 
 @files.route('/<hash_path>', methods=['POST'])
-def upload(hash_path):
+def upload(hash_path: str):
     try:
         file_path = safe_join(root_storage, hash_path)
 
@@ -51,11 +53,10 @@ def upload(hash_path):
         return common.rerror(e, 500)
 
 
-@files.route('/<hash>', methods=['GET'])
-def download(hash):
-    path = safe_join(root_storage, hash)
+@files.route('/<hash_str>', methods=['GET'])
+def download(hash_str: str):
+    path = safe_join(root_storage, hash_str)
     if os.path.exists(path):
-        return send_from_directory(root_storage, hash)
+        return send_from_directory(root_storage, hash_str)
     else:
         return common.rerror("No such file", 404)
-

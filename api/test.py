@@ -1,7 +1,8 @@
 # to test blueprint module and server
 
-import JsonResponse
 from flask import Blueprint, request
+
+import JsonResponse
 from api import common
 
 test = Blueprint('test', __name__)
@@ -13,5 +14,5 @@ def echo():
 
 
 @test.route('/error', methods=['GET'])
-def error():
+def error() -> JsonResponse:
     return common.rerror('test error', 400)

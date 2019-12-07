@@ -1,5 +1,8 @@
-from flask import Blueprint, request
 import json
+
+from flask import Blueprint, request
+
+from JsonResponse import JsonResponse
 from api import common, auth
 
 # manage users
@@ -7,9 +10,9 @@ from api import common, auth
 profile = Blueprint('profile', __name__)
 
 
-def get_profile(uuid: str):
-    app.cursor.execute("SELECT * from user_data where uuid=%s", uuid)
-    fetchs = app.cursor.fetchall()
+def get_profile(uuid: str) -> JsonResponse:
+    common.cursor.execute("SELECT * from user_data where uuid=%s", uuid)
+    fetchs = common.cursor.fetchall()
 
     if not fetchs or len(fetchs) == 0:
         raise ValueError("해당 유저를 찾을 수 없습니다.")
@@ -17,12 +20,12 @@ def get_profile(uuid: str):
     data = fetchs[0]
     data['birthday'] = data['birthday'].strftime('%Y-%m-%d')
     del data['uuid'], data['pass']
-    return data
+    return JsonResponse(data)
 
 
 # GET someone's profile
 @profile.route('/profile/<uuid>', methods=['get'])
-def profile_get(uuid: str):
+def profile_get(uuid: str) -> JsonResponse:
     try:
         p = get_profile(uuid)
         return json.dumps(p)
@@ -36,7 +39,7 @@ def profile_get(uuid: str):
 
 # EDIT my profile (계정주인만 수정가능)
 @profile.route('/profile/<uuid>', methods=['put'])
-def profile_edit(uuid: str):
+def profile_edit(uuid: str) -> JsonResponse:
     try:
         if not request.is_json:
             return common.rerror("invalid json", 400)
@@ -64,7 +67,7 @@ def profile_edit(uuid: str):
         if 'profileMusic' in args:
             pass
 
-        return json.dumps(get_profile(uuid))
+        return JsonResponse(get_profile(uuid))
 
     except Exception as e:
         return common.rerror(e, 500)
