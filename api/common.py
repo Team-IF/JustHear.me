@@ -25,7 +25,7 @@ def rerror(ex, status_code=400):  # response error
     return r
 
 
-print("Connect DB")
+print("Connecting DB...")
 
 db = pymysql.connect(unix_socket="/var/run/mysqld/mysqld.sock", user="hearme", password="dhdh4321", db="hearme",
                      charset="utf8")

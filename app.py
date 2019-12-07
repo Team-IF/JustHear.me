@@ -21,7 +21,7 @@ app.register_blueprint(files.files, url_prefix='/files')
 app.register_blueprint(profile.profile, url_prefix='/profile')
 app.register_blueprint(test.test, url_prefix='/test')
 
-print("Start Server")
+print("Starting Server...")
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=7000, ssl_context=context, use_reloader=False)
