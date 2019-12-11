@@ -1,5 +1,4 @@
 import datetime
-import re
 from uuid import uuid4
 
 import bcrypt
@@ -12,7 +11,7 @@ from api import common
 # authenticate user
 
 auth = Blueprint('auth', __name__)
-emailregex = re.compile('^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$')
+
 
 
 # LOGIN
@@ -59,7 +58,7 @@ def register() -> JsonResponse:
             return common.rerror("invalid json", 400)
 
         req = request.json
-        if not emailregex.search(req.get('email')):
+        if not common.emailregex.search(req.get('email')):
             return common.rerror("invalid email", 400)
 
         common.cursor.execute("select uuid from user_data")

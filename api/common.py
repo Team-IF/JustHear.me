@@ -1,12 +1,21 @@
 # -- coding: utf-8 --
 import json
+import re
 import traceback
+import uuid
 
 import pymysql
 
 import JsonResponse
 
 SSL = True
+emailregex = re.compile('^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$')
+
+
+class User:
+    def __init__(self, uid):
+        self.uuid = uuid.UUID(uid)
+        pass
 
 
 def rerror(ex, status_code: int = 400) -> JsonResponse:  # response error
