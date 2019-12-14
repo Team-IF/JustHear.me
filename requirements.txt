@@ -1,3 +1,4 @@
+pymongo
 pymysql
 flask
 bcrypt

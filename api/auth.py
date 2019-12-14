@@ -68,7 +68,8 @@ def register() -> JsonResponse:
         while uuid in uuids:
             uuid = str(uuid4())
 
-        values = (uuid,req.get('username'),req.get('email'),hashpw(req.get('pass')),req.get('phonenumber'),req.get('birthday'),req.get('gender'),req.get('profileImg'),req.get('profileMusic'))
+        values = (uuid, req.get('username'), req.get('email'), common.hashpw(req.get('pass')), req.get('phonenumber'),
+                  req.get('birthday'), req.get('gender'), req.get('profileImg'), req.get('profileMusic'))
 
         try:
             common.cursor.execute(
@@ -125,5 +126,3 @@ def token2uuid(token: str) -> str:
     return uuid
 
 
-def hashpw(password: str) -> str:
-    return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt(10)).decode("utf-8")
