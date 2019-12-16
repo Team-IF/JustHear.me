@@ -1,11 +1,15 @@
 # -- coding: utf-8 --
+from __future__ import annotations
+
+import datetime
 import enum
 import json
 import re
+import secrets
 import traceback
 import typing
 import uuid
-from typing import Union
+from typing import Union, List
 
 import bcrypt
 import pymysql
@@ -26,24 +30,25 @@ class Gender(enum.Enum):
 
 
 class User:
-    def __init__(self, uid: typing.Union[str, uuid.UUID], username: str, email: str, password: str, birthday=None,
-                 gender=None, profileImg=None, profileMusic=None):
+    def __init__(self, uid: typing.Union[str, uuid.UUID], username: str, email: str, password: str,
+                 birthday: datetime.date = None,
+                 gender: Gender = None, profileimg=None, profilemusic=None):
         if isinstance(uid, str):
             self.uuid: uuid.UUID = uuid.UUID(uid)
         elif isinstance(uid, uuid.UUID):
             self.uuid: uuid.UUID = uid
         else:
-            raise TypeError("uid have to be type 'uuid.UUID','str'")
+            raise TypeError("uid have to be type 'uuid.UUID' or 'str'")
         self.username: str = username
         if emailregex.match(email):
             self.email = email
         else:
             raise ValueError("Invaild E-mail format")
         self.password = hashpw(password)
-        self.birthday = birthday
-        self.gender = gender
-        self.profileImg = profileImg
-        self.profileMusic = profileMusic
+        self.birthday: datetime.date = birthday
+        self.gender: Gender = gender
+        self.profileImg = profileimg
+        self.profileMusic = profilemusic
 
     @property
     def __dict__(self):
@@ -52,6 +57,22 @@ class User:
 
     def matchpw(self, passwd):
         return bcrypt.checkpw(passwd.encode('utf-8'), self.password.encode('utf-8'))
+
+
+class Hear:
+    def __init__(self, title: str, content: str, author: User):
+        self.id: str = secrets.token_urlsafe(10)
+        self.title: str = title
+        self.content: str = content
+        self.author: User = author
+        self.comments: List[Hear] = []
+
+    @property
+    def __dict__(self):
+        return {'id': self.id, 'title': self.title, 'content': self.content, 'author': self.author}
+
+    def addcomment(self, comment: Hear):
+        self.comments.append(comment)
 
 
 def rerror(ex: Union[Exception, str], status_code: int = 400) -> JsonResponse:  # response error
