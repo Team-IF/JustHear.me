@@ -75,7 +75,7 @@ class Hear:
         self.comments.append(comment)
 
 
-def rerror(ex: Union[Exception, str], status_code: int = 400) -> JsonResponse:  # response error
+def rerror(ex: Union[Exception, str], status_code: int = 400) -> JsonResponse.JsonResponse:  # response error
     r = JsonResponse.JsonResponse()
     r.status_code = status_code
 

@@ -13,7 +13,6 @@ from api import common
 auth = Blueprint('auth', __name__)
 
 
-
 # LOGIN
 # TODO : check email and pw validation
 @auth.route('/login', methods=['post'])
@@ -86,6 +85,7 @@ def register() -> JsonResponse:
     except Exception as e:
         return common.rerror(e, 500)
 
+
 # delete login token
 @auth.route('/login', methods=['DELETE'])
 def invalidate_token() -> Response:
@@ -124,5 +124,3 @@ def token2uuid(token: str) -> str:
     common.cursor.execute("UPDATE 'sessions' SET expiredate=%s WHERE accessToken=%s", (expiredate, token))
     common.db.commit()
     return uuid
-
-
