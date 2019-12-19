@@ -12,6 +12,7 @@ import uuid
 from typing import Union, List
 
 import bcrypt
+import pymongo
 import pymysql
 
 import JsonResponse
@@ -97,6 +98,10 @@ def rerror(ex: Union[Exception, str], status_code: int = 400) -> JsonResponse.Js
 
 print("Connecting DB...")
 
-db = pymysql.connect(unix_socket="/var/run/mysqld/mysqld.sock", user="hearme", password="dhdh4321", db="hearme",
-                     charset="utf8")
-cursor = db.cursor(pymysql.cursors.DictCursor)
+conn = pymongo.MongoClient('mongodb://%s:%s@localhost' % ('hearme', 'dhdh4321'))
+db = conn.hearme
+
+olddb = pymysql.connect(unix_socket="/var/run/mysqld/mysqld.sock", user="hearme", password="dhdh4321", db="hearme",
+                        charset="utf8")
+
+cursor = olddb.cursor(pymysql.cursors.DictCursor)

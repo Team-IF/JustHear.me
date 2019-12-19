@@ -38,7 +38,7 @@ def login() -> JsonResponse:
             expiredate = expiredate + datetime.timedelta(days=14)
             common.cursor.execute("INSERT INTO sessions (uuid, accessToken, expiredate) VALUES (%s,%s,%s) ",
                                   (data['uuid'], newtoken, expiredate))
-            common.db.commit()
+            common.olddb.commit()
             return JsonResponse({
                 'token': newtoken,
                 'uuid': data['uuid']
@@ -74,7 +74,7 @@ def register() -> JsonResponse:
             common.cursor.execute(
                 "INSERT INTO `hearme`.`user_data` (`uuid`, `username`, `email`, `pass`, `phonenumber`, `birthday`, `gender`, `profileImg`, `profileMusic`) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s) ",
                 values)
-            common.db.commit()
+            common.olddb.commit()
             return Response(status=204)
         except pymysql.IntegrityError as e:
             if 'user_data_email_uindex' in str(e):
@@ -96,7 +96,7 @@ def invalidate_token() -> Response:
             return common.rerror("로그인을 해주세요.", 403)
 
         common.cursor.execute("DELETE FROM sessions WHERE accessToken=%s", token)
-        common.db.commit()
+        common.olddb.commit()
         return Response(status=204)
 
     except Exception as e:
@@ -122,5 +122,5 @@ def token2uuid(token: str) -> str:
     uuid = fetchs[0]['uuid']
     expiredate = datetime.datetime.utcnow() + datetime.timedelta(days=14)
     common.cursor.execute("UPDATE 'sessions' SET expiredate=%s WHERE accessToken=%s", (expiredate, token))
-    common.db.commit()
+    common.olddb.commit()
     return uuid
