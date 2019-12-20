@@ -19,6 +19,7 @@ import JsonResponse
 
 SSL = True
 emailregex = re.compile('^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$')
+phoneregex = re.compile('[+][0-9]+')
 
 
 def hashpw(password: str) -> str:
@@ -31,7 +32,7 @@ class Gender(enum.Enum):
 
 
 class User:
-    def __init__(self, uid: typing.Union[str, uuid.UUID], username: str, email: str, password: str,
+    def __init__(self, uid: typing.Union[str, uuid.UUID], username: str, email: str, password: str, phonenumber: str,
                  birthday: datetime.date = None,
                  gender: Gender = None, profileimg=None, profilemusic=None):
         if isinstance(uid, str):
@@ -45,19 +46,51 @@ class User:
             self.email = email
         else:
             raise ValueError("Invaild E-mail format")
+        if phoneregex.match(phonenumber):
+            self.phonenumber = phonenumber
+        else:
+            raise ValueError("Invaild Phone Number format")
         self.password = hashpw(password)
         self.birthday: datetime.date = birthday
         self.gender: Gender = gender
         self.profileImg = profileimg
         self.profileMusic = profilemusic
 
-    @property
-    def __dict__(self):
-        return {'uuid': self.uuid, 'username': self.username, 'email': self.email, 'birthday': self.birthday,
-                'gender': self.gender, 'profileImg': self.profileImg, 'profileMusic': self.profileMusic}
+    def toDict(self):
+        return {
+            '_id': self.uuid,
+            'username': self.username,
+            'email': self.email,
+            'password': self.password,
+            'phonenumber': self.phonenumber,
+            'birthday': self.birthday,
+            'gender': self.gender,
+            'profileImg': self.profileImg,
+            'profileMusic': self.profileMusic
+        }
 
     def matchpw(self, passwd):
         return bcrypt.checkpw(passwd.encode('utf-8'), self.password.encode('utf-8'))
+
+    @classmethod
+    def fromUUID(cls, uid: Union[uuid.UUID, str]):
+        if isinstance(uid, str):
+            uid = uuid.UUID = uuid.UUID(uid)
+        elif isinstance(uid, uuid.UUID):
+            uid = uuid.UUID = uid
+        result = db.user_data.find_one({"_id": uid})
+        if not result:
+            return None
+        else:
+            return cls(**result)
+
+    @classmethod
+    def fromEmail(cls, email: str):
+        result = db.user_data.find_one({"email": email})
+        if not result:
+            return None
+        else:
+            return cls(**result)
 
 
 class Hear:
@@ -68,9 +101,12 @@ class Hear:
         self.author: User = author
         self.comments: List[Hear] = []
 
-    @property
-    def __dict__(self):
-        return {'id': self.id, 'title': self.title, 'content': self.content, 'author': self.author}
+    def toDict(self):
+        return {
+            '_id': self.id,
+            'title': self.title,
+            'content': self.content,
+            'author': self.author}
 
     def addcomment(self, comment: Hear):
         self.comments.append(comment)
@@ -98,7 +134,7 @@ def rerror(ex: Union[Exception, str], status_code: int = 400) -> JsonResponse.Js
 
 print("Connecting DB...")
 
-conn = pymongo.MongoClient('mongodb://%s:%s@localhost' % ('hearme', 'dhdh4321'))
+conn = pymongo.MongoClient('mongodb://%s:%s@localhost/%s' % ('hearme', 'dhdh4321', 'hearme'))
 db = conn.hearme
 
 olddb = pymysql.connect(unix_socket="/var/run/mysqld/mysqld.sock", user="hearme", password="dhdh4321", db="hearme",

@@ -2,7 +2,6 @@ import datetime
 from uuid import uuid4
 
 import bcrypt
-import pymysql
 from flask import Blueprint, request, Response
 
 from JsonResponse import JsonResponse
@@ -60,25 +59,20 @@ def register() -> JsonResponse:
         if not common.emailregex.search(req.get('email')):
             return common.rerror("invalid email", 400)
 
-        common.cursor.execute("select uuid from user_data")
-        uuids = common.cursor.fetchall()
-        uuids = (x['uuid'] for x in uuids)
+        uuids = (x['_id'] for x in common.db.user_data.find())
+        print(uuids)
         uuid = str(uuid4())
         while uuid in uuids:
             uuid = str(uuid4())
 
-        values = (uuid, req.get('username'), req.get('email'), common.hashpw(req.get('pass')), req.get('phonenumber'),
-                  req.get('birthday'), req.get('gender'), req.get('profileImg'), req.get('profileMusic'))
-
+        values = (uuid, req.get('username'), req.get('email'), req.get('pass'), req.get('phonenumber'),
+                  None if not req.get('birthday') else datetime.datetime.strptime(req.get('birthday'), '%Y-%m-%d').date(
+                  ), req.get('gender'),
+                  req.get('profileImg'), req.get('profileMusic'))
+        user = common.User(*values)
         try:
-            common.cursor.execute(
-                "INSERT INTO `hearme`.`user_data` (`uuid`, `username`, `email`, `pass`, `phonenumber`, `birthday`, `gender`, `profileImg`, `profileMusic`) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s) ",
-                values)
-            common.olddb.commit()
+            common.db.user_data.insert_one(user.toDict())
             return Response(status=204)
-        except pymysql.IntegrityError as e:
-            if 'user_data_email_uindex' in str(e):
-                return common.rerror('email is duplicated', 400)
         except Exception as e:
             return common.rerror(e, 500)
 

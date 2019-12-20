@@ -7,5 +7,11 @@
       <jdbc-driver>org.mariadb.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mariadb://localhost:23307/hearme</jdbc-url>
     </data-source>
+    <data-source source="LOCAL" name="hearme@localhost [2]" uuid="07140be8-e358-4824-bd80-11d0f253aa48">
+      <driver-ref>mongo</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.dbschema.MongoJdbcDriver</jdbc-driver>
+      <jdbc-url>mongodb://localhost:27017/hearme</jdbc-url>
+    </data-source>
   </component>
 </project>
