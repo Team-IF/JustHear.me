@@ -33,8 +33,8 @@ class Gender(enum.Enum):
 
 class User:
     def __init__(self, uid: typing.Union[str, uuid.UUID], username: str, email: str, password: str, phonenumber: str,
-                 birthday: datetime.date = None,
-                 gender: Gender = None, profileimg=None, profilemusic=None):
+                 birthday: datetime.date,
+                 gender: Gender, profileimg, profilemusic):
         if isinstance(uid, str):
             self.uuid: uuid.UUID = uuid.UUID(uid)
         elif isinstance(uid, uuid.UUID):
@@ -75,9 +75,9 @@ class User:
     @classmethod
     def fromUUID(cls, uid: Union[uuid.UUID, str]):
         if isinstance(uid, str):
-            uid = uuid.UUID = uuid.UUID(uid)
+            uid: uuid.UUID = uuid.UUID(uid)
         elif isinstance(uid, uuid.UUID):
-            uid = uuid.UUID = uid
+            uid: uuid.UUID = uid
         result = db.user_data.find_one({"_id": uid})
         if not result:
             return None

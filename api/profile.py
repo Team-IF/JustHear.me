@@ -9,15 +9,14 @@ profile = Blueprint('profile', __name__)
 
 
 def get_profile(uuid: str) -> JsonResponse:
-    common.cursor.execute("SELECT * from user_data where uuid=%s", uuid)
-    fetchs = common.cursor.fetchall()
+    user = common.User.fromUUID(uuid)
 
-    if not fetchs or len(fetchs) == 0:
+    if not user:
         raise ValueError("해당 유저를 찾을 수 없습니다.")
 
-    data = fetchs[0]
+    data = user.toDict()
     data['birthday'] = data['birthday'].strftime('%Y-%m-%d')
-    del data['uuid'], data['pass']
+    del data['_id'], data['pass']
     return JsonResponse(data)
 
 
