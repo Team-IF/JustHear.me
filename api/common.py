@@ -35,21 +35,26 @@ class User:
     def __init__(self, uid: typing.Union[str, uuid.UUID], username: str, email: str, password: str, phonenumber: str,
                  birthday: datetime.date,
                  gender: Gender, profileimg, profilemusic):
+
         if isinstance(uid, str):
             self.uuid: uuid.UUID = uuid.UUID(uid)
         elif isinstance(uid, uuid.UUID):
             self.uuid: uuid.UUID = uid
         else:
             raise TypeError("uid have to be type 'uuid.UUID' or 'str'")
+
         self.username: str = username
+
         if emailregex.match(email):
             self.email = email
         else:
             raise ValueError("Invaild E-mail format")
+
         if phoneregex.match(phonenumber):
             self.phonenumber = phonenumber
         else:
             raise ValueError("Invaild Phone Number format")
+
         self.password = hashpw(password)
         self.birthday: datetime.date = birthday
         self.gender: Gender = gender
@@ -57,17 +62,21 @@ class User:
         self.profileMusic = profilemusic
 
     def toDict(self):
-        return {
-            '_id': self.uuid,
-            'username': self.username,
-            'email': self.email,
-            'password': self.password,
-            'phonenumber': self.phonenumber,
-            'birthday': self.birthday,
-            'gender': self.gender,
-            'profileImg': self.profileImg,
-            'profileMusic': self.profileMusic
-        }
+        d = self.__dict__
+        d['_id'] = d.pop('uuid', None)
+        return d
+
+        #return {
+        #    '_id': self.uuid,
+        #    'username': self.username,
+        #    'email': self.email,
+        #    'password': self.password,
+        #    'phonenumber': self.phonenumber,
+        #    'birthday': self.birthday,
+        #    'gender': self.gender,
+        #    'profileImg': self.profileImg,
+        #    'profileMusic': self.profileMusic
+        #}
 
     def matchpw(self, passwd):
         return bcrypt.checkpw(passwd.encode('utf-8'), self.password.encode('utf-8'))
