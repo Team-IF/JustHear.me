@@ -24,26 +24,20 @@ def login() -> JsonResponse:
         if not req.get('email') or not req.get("pass"):
             return common.rerror("이메일과 비밀번호를 입력해 주세요.", 400)
 
-        common.cursor.execute("SELECT * from user_data where email=%s", req.get('email'))
-        fetchs = common.cursor.fetchall()
-
-        if not fetchs or len(fetchs) == 0:
+        user = common.User.fromEmail(req.get('email'))
+        if not user or user.matchpw(req.get("pass")):
             return common.rerror("잘못된 이메일/비밀번호", 403)
 
-        data = fetchs[0]
-        if bcrypt.checkpw(req.get('pass').encode('utf-8'), data.get('pass').encode('utf-8')):
-            newtoken = str(uuid4())
-            expiredate = datetime.datetime.utcnow()
-            expiredate = expiredate + datetime.timedelta(days=14)
-            common.cursor.execute("INSERT INTO sessions (uuid, accessToken, expiredate) VALUES (%s,%s,%s) ",
-                                  (data['uuid'], newtoken, expiredate))
-            common.olddb.commit()
-            return JsonResponse({
-                'token': newtoken,
-                'uuid': data['uuid']
-            })
-        else:
-            return common.rerror("잘못된 이메일/비밀번호", 403)
+        newtoken = str(uuid4())
+        expiredate = datetime.datetime.utcnow()
+        expiredate = expiredate + datetime.timedelta(days=14)
+        common.cursor.execute("INSERT INTO sessions (uuid, accessToken, expiredate) VALUES (%s,%s,%s) ",
+                              (data['uuid'], newtoken, expiredate))
+        common.olddb.commit()
+        return JsonResponse({
+            'token': newtoken,
+            'uuid': data['uuid']
+        })
 
     except Exception as e:
         return common.rerror(e, 500)
@@ -65,16 +59,25 @@ def register() -> JsonResponse:
         while uuid in uuids:
             uuid = str(uuid4())
 
-        values = (uuid, req.get('username'), req.get('email'), req.get('pass'), req.get('phonenumber'),
-                  None if not req.get('birthday') else datetime.datetime.strptime(req.get('birthday'), '%Y-%m-%d').date(
-                  ), req.get('gender'),
-                  req.get('profileImg'), req.get('profileMusic'))
+        birth = req.get('birthday')
+        if not birth:
+            birth = None
+        else:
+            birth = datetime.datetime.strptime(birth, '%Y-%m-%d').date()
+
+        values = (uuid,
+                 req.get('username'),
+                 req.get('email'),
+                 req.get('pass'), 
+                 req.get('phonenumber'),
+                 birth,
+                 req.get('gender'),
+                 req.get('profileImg'),
+                 req.get('profileMusic'))
         user = common.User(*values)
-        try:
-            common.db.user_data.insert_one(user.toDict())
-            return Response(status=204)
-        except Exception as e:
-            return common.rerror(e, 500)
+        
+        common.db.user_data.insert_one(user.toDict())
+        return Response(status=204)
 
     except Exception as e:
         return common.rerror(e, 500)
