@@ -33,7 +33,9 @@ def upload_file(filename: str, file: FileStorage):
         temp_path = safe_join(temp_storage, filename)
         file.save(temp_path)
 
+        # TODO : 파일 이름을 해쉬로
         #hash_path = hashlib.sha1(file).hexdigest()
+
         hash_path = filename
         file_path = safe_join(root_storage, hash_path)
 
