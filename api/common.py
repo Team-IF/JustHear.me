@@ -15,7 +15,7 @@ import bcrypt
 import pymongo
 import pymysql
 
-import JsonResponse
+from JsonResponse import JsonResponse
 
 SSL = True
 emailregex = re.compile('^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$')
@@ -25,6 +25,12 @@ phoneregex = re.compile('[+][0-9]+')
 def hashpw(password: str) -> str:
     return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt(10)).decode("utf-8")
 
+
+def protocol():
+    if SSL:
+        return "https://"
+    else:
+        return "http://"
 
 class Gender(enum.Enum):
     M = 'M'
@@ -66,7 +72,7 @@ class User:
         d['_id'] = d.pop('uuid', None)
         return d
 
-        #return {
+        # return {
         #    '_id': self.uuid,
         #    'username': self.username,
         #    'email': self.email,
@@ -76,7 +82,7 @@ class User:
         #    'gender': self.gender,
         #    'profileImg': self.profileImg,
         #    'profileMusic': self.profileMusic
-        #}
+        # }
 
     def matchpw(self, passwd):
         return bcrypt.checkpw(passwd.encode('utf-8'), self.password.encode('utf-8'))
@@ -122,7 +128,7 @@ class Hear:
 
 
 def rerror(ex: Union[Exception, str], status_code: int = 400) -> JsonResponse.JsonResponse:  # response error
-    r = JsonResponse.JsonResponse()
+    r = JsonResponse()
     r.status_code = status_code
 
     if isinstance(ex, Exception):

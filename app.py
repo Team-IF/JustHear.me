@@ -13,13 +13,14 @@ print("Initializing Flask...")
 app = Flask(__name__)
 app.debug = True  # ONLY TO DEBUG #
 app.response_class = JsonResponse
-context = ('/etc/letsencrypt/live/nanobot.tk/fullchain.pem', "/etc/letsencrypt/live/nanobot.tk/privkey.pem")
+context = ('/etc/letsencrypt/live/teamif.io/fullchain.pem', "/etc/letsencrypt/live/teamif.io/privkey.pem")
 common.SSL = True
 
 app.register_blueprint(auth.auth, url_prefix='/auth')
 app.register_blueprint(files.files, url_prefix='/files')
 app.register_blueprint(profile.profile, url_prefix='/profile')
 app.register_blueprint(test.test, url_prefix='/test')
+app.register_blueprint(hear.hear, url_prefix='/hear')
 
 print("Starting Server...")
 

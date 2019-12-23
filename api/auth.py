@@ -1,7 +1,6 @@
 import datetime
 from uuid import uuid4
 
-import bcrypt
 from flask import Blueprint, request, Response
 
 from JsonResponse import JsonResponse
@@ -66,16 +65,16 @@ def register() -> JsonResponse:
             birth = datetime.datetime.strptime(birth, '%Y-%m-%d').date()
 
         values = (uuid,
-                 req.get('username'),
-                 req.get('email'),
-                 req.get('pass'), 
-                 req.get('phonenumber'),
-                 birth,
-                 req.get('gender'),
-                 req.get('profileImg'),
-                 req.get('profileMusic'))
+                  req.get('username'),
+                  req.get('email'),
+                  req.get('pass'),
+                  req.get('phonenumber'),
+                  birth,
+                  req.get('gender'),
+                  req.get('profileImg'),
+                  req.get('profileMusic'))
         user = common.User(*values)
-        
+
         common.db.user_data.insert_one(user.toDict())
         return Response(status=204)
 
