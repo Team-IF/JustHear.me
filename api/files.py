@@ -4,6 +4,7 @@ import random
 import shutil
 
 from flask import Blueprint, request, send_from_directory, safe_join
+from werkzeug.datastructures import FileStorage
 
 from api import common
 
@@ -21,29 +22,24 @@ if not os.path.isdir(temp_storage):
     os.mkdir(temp_storage)
 
 
-@files.route('/<hash_path>', methods=['POST'])
-def upload(hash_path: str):
+@files.route('/<filename>', methods=['POST'])
+def upload(filename: str):
+    return upload_file(filename, request.files['file'])
+
+def upload_file(filename: str, file: FileStorage):
     try:
+        file_path = safe_join(root_storage, filename)
+
+        temp_path = safe_join(temp_storage, filename)
+        file.save(temp_path)
+
+        #hash_path = hashlib.sha1(file).hexdigest()
+        hash_path = filename
         file_path = safe_join(root_storage, hash_path)
 
-        if not os.path.exists(file_path):
-            file = request.files['file']
+        handle_file(temp_path, file_path)
 
-            temp_path = safe_join(temp_storage, str(random.randint(10000, 99999)))
-            file.save(temp_path)
-
-            hash_path = hashlib.sha1(file).hexdigest()
-            file_path = safe_join(root_storage + '/' + hash_path)
-
-            shutil.move(temp_path, file_path)
-
-        url = ""
-        if common.SSL:
-            url += "https://"
-        else:
-            url += "http://"
-
-        url += safe_join(request.headers['host'], serv_storage, hash_path)
+        url = common.protocol() + safe_join(request.headers['host'], serv_storage, hash_path)
         return url
 
     except KeyError as e:
@@ -51,6 +47,17 @@ def upload(hash_path: str):
 
     except Exception as e:
         return common.rerror(e, 500)
+
+def handle_file(orginal_path, result_path):
+    filename, ext = os.path.splitext(orginal_path)
+
+    if ext == ".mp3":
+        # original_path 의 파일을 어케어케 해서 result_path 에 저장시키면됨
+        pass
+    elif ext == ".aac":
+        pass
+    else:
+        shutil.move(orginal_path, result_path)
 
 
 @files.route('/<hash_str>', methods=['GET'])
