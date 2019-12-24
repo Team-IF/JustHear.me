@@ -30,12 +30,9 @@ def login() -> JsonResponse:
         newtoken = str(uuid4())
         expiredate = datetime.datetime.utcnow()
         expiredate = expiredate + datetime.timedelta(days=14)
-        common.cursor.execute("INSERT INTO sessions (uuid, accessToken, expiredate) VALUES (%s,%s,%s) ",
-                              (data['uuid'], newtoken, expiredate))
-        common.olddb.commit()
         return JsonResponse({
             'token': newtoken,
-            'uuid': data['uuid']
+            'uuid': user.uuid
         })
 
     except Exception as e:

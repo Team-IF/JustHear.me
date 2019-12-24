@@ -1,4 +1,5 @@
 import datetime
+import json
 from uuid import uuid4
 
 from flask import Blueprint, request, Response, safe_join
@@ -13,6 +14,7 @@ from .common import (
 
 hear = Blueprint('hear', __name__)
 
+
 @hear.route('/upload', methods=['POST'])
 def upload():
     try:
@@ -21,25 +23,25 @@ def upload():
         author = data.get("author")
         content = data.get("content")
 
-        files_info = data.get("fileinfo") # 파일목록
+        files_info = data.get("fileinfo")  # 파일목록
         files_url = list()
-
         if files_info:
-            for name in files_info.split(";"):
+            for name in files_info.split(";")[:-1]:
                 file_value = request.files.get(name)
-
+                print(file_value)
+                print()
                 if file_value:
                     u = files.upload_file(file_value.filename, file_value)
                     files_url.append(u)
 
         # 글 정보
-        HEAR_DATA = (author, content, files_url)
+        hear_data = (author, content, files_url)
+        print(hear_data)
 
         # debug
-        return data
-    
+        return json.dumps(data, ensure_ascii=False)
+
     except Exception as e:
-        raise e
         return common.rerror(e, 500)
 
 
@@ -49,9 +51,9 @@ def test():
     <html><head></head><body>
     <form action="/hear/upload" method="POST" enctype="multipart/form-data">
         Author : <br>
-        <input type="text" name="author">
+        <input type="text" name="author"> <br>
         Content : <br>
-        <input type="text" name="content">
+        <input type="text" name="content"> <br>
         Your file : <br>
         <input type="file" name="file1">
 

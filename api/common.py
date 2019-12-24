@@ -9,7 +9,7 @@ import secrets
 import traceback
 import typing
 import uuid
-from typing import Union, List
+from typing import Union
 
 import bcrypt
 import pymongo
@@ -31,6 +31,7 @@ def protocol():
         return "https://"
     else:
         return "http://"
+
 
 class Gender(enum.Enum):
     M = 'M'
@@ -114,7 +115,6 @@ class Hear:
         self.title: str = title
         self.content: str = content
         self.author: User = author
-        self.comments: List[Hear] = []
 
     def toDict(self):
         return {
@@ -122,9 +122,6 @@ class Hear:
             'title': self.title,
             'content': self.content,
             'author': self.author}
-
-    def addcomment(self, comment: Hear):
-        self.comments.append(comment)
 
 
 def rerror(ex: Union[Exception, str], status_code: int = 400) -> JsonResponse.JsonResponse:  # response error
