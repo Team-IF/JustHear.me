@@ -28,8 +28,6 @@ def upload(filename: str):
 
 def upload_file(filename: str, file: FileStorage):
     try:
-        file_path = safe_join(root_storage, filename)
-
         temp_path = safe_join(temp_storage, filename)
         file.save(temp_path)
 

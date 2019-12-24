@@ -11,8 +11,6 @@ from .common import (
     User
 )
 
-# authenticate user
-
 hear = Blueprint('hear', __name__)
 
 @hear.route('/upload', methods=['POST'])
@@ -20,7 +18,6 @@ def upload():
     try:
         data = dict(request.form)
 
-        content = list()
         author = data.get("author")
         content = data.get("content")
 
