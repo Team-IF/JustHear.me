@@ -1,6 +1,0 @@
-pymongo
-pymysql
-flask
-bcrypt
-pydub
-simpleaudio
