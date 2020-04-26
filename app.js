@@ -1,7 +1,6 @@
 const express = require("express");
 const config = require('./config/config');
 const app = express();
-const router = require('./router/main')(app);
 
 app.use((req, res, next) => {
     console.log(`${req.connection.remoteAddress} : ${req.path}`);
