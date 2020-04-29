@@ -1,6 +1,6 @@
 const express = require("express");
 
-const HttpError = require("./routes/httperror").HttpError;
+const HttpError = require("./models/httperror").HttpError;
 const MongoClient = require('mongodb').MongoClient;
 
 const config = require('./config/config');
@@ -10,7 +10,8 @@ async function init() {
     let dburl = `mongodb://${config.db.user}:${config.db.password}@${config.db.hostname}/${config.db.dbname}?authSource=admin&authMechanism=SCRAM-SHA-1`;
     let dbclient = new MongoClient(dburl, { useNewUrlParser: true });
     await dbclient.connect();
-    const db = dbclient.db(config.db.dbname);
+    app.locals.db = dbclient.db(config.db.dbname);
+    app.locals.config = config;
 
     // test logger
     app.use((req, res, next) => {
@@ -18,8 +19,8 @@ async function init() {
         next();
     });
 
-    app.use('/auth', require('./routes/auth')(db));
-    app.use('/test', require('./routes/test')(db));
+    app.use('/auth', require('./routes/auth'));
+    app.use('/test', require('./routes/test'));
 
     // error handler
     app.use((err, req, res, next) => {

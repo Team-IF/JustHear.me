@@ -1,5 +1,5 @@
 const express = require("express");
-const HttpError = require("./httperror").HttpError;
+const HttpError = require("../models/httperror").HttpError;
 const router = express.Router();
 let db;
 
