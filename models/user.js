@@ -15,6 +15,16 @@ class User {
         this.profileimg = profileimg;
         this.profilemusic = profilemusic;
     }
+
+    // 특정 프로퍼티만 반환
+    filter(propertyNames) {
+        let obj = {};
+        Object.keys(this)
+            .filter(x => propertyNames.includes(x))
+            .forEach(x => obj[x] = this[x]);
+
+        return obj;
+    }
 }
 
 class UserBuilder { // builder pattern of User class
@@ -42,7 +52,9 @@ class UserBuilder { // builder pattern of User class
     }
 
     setPhoneNumber(number) {
-        if (number.match(phonereg))
+        if (!number)
+            this.number = undefined;
+        else if (number.match(phonereg))
             this.phonenumber = number;
         else
             throw new Error("Invalid phone number format");
@@ -50,7 +62,9 @@ class UserBuilder { // builder pattern of User class
     }
 
     setBirthday(bd) {
-        if (bd instanceof moment)
+        if (!bd)
+            this.bd = undefined;
+        else if (bd instanceof moment)
             this.birthday = bd.format('YYYY-MM-DD');
         else if (typeof (bd) === "string")
             this.birthday = bd;
@@ -61,7 +75,9 @@ class UserBuilder { // builder pattern of User class
     }
 
     setGender(g) {
-        if (typeof (g) === "string")
+        if (!g)
+            this.gender = undefined;
+        else if (typeof (g) === "string")
             this.gender = g;
         else
             throw new Error("Unexpected Type of g");
