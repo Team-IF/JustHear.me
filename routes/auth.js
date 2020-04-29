@@ -1,7 +1,13 @@
 const express = require("express");
-const uuid4 = require('uuid4');
+const jwt = require('jsonwebtoken');
 const router = express.Router();
 let db;
+
+function createToken() {
+    return new Promise((resolve, reject) => {
+
+    });
+}
 
 router.use(express.json());
 
@@ -17,6 +23,7 @@ router.post('/login', (req, res) => {
     if (user.pass !== pw)
         throw new HttpError(403, "잘못된 이메일/비밀번호");
 });
+
 
 
 module.exports = function (s) {
