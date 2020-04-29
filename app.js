@@ -20,6 +20,7 @@ async function init() {
     });
 
     app.use('/auth', require('./routes/auth'));
+    app.use('/profile', require('./routes/profile'));
     app.use('/test', require('./routes/test'));
 
     // error handler

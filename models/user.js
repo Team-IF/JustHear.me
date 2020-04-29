@@ -1,5 +1,4 @@
-const bcrypt = require("bcrypt");
-const bcryptSaltRounds = 10;
+const moment = require("moment");
 
 const emailreg = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 const phonereg = /[+][0-9]+/;
@@ -42,12 +41,6 @@ class UserBuilder { // builder pattern of User class
         return this;
     }
 
-    async encPassword(password) {
-        let encPassword = await bcrypt.hash(password, bcryptSaltRounds);
-        this.setEncryptedPassword(encPassword);
-        return this;
-    }
-
     setPhoneNumber(number) {
         if (number.match(phonereg))
             this.phonenumber = number;
@@ -59,7 +52,7 @@ class UserBuilder { // builder pattern of User class
     setBirthday(bd) {
         if (bd instanceof moment)
             this.birthday = bd.format('YYYY-MM-DD');
-        else if (bd instanceof str)
+        else if (typeof (bd) === "string")
             this.birthday = bd;
         else
             throw new Error("Unexpected Type of bd");
@@ -68,7 +61,7 @@ class UserBuilder { // builder pattern of User class
     }
 
     setGender(g) {
-        if (g instanceof str)
+        if (typeof (g) === "string")
             this.gender = g;
         else
             throw new Error("Unexpected Type of g");
