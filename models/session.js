@@ -17,7 +17,6 @@ class Session {
     }
 
     static createNew(uuid) {
-        const uuid = uuid;
         const token = uuid();
         const exp = moment().add(14, "days");
 
