@@ -20,7 +20,7 @@ router.get('/:id', asynchandler(async (req, res) => {
         throw new HttpError(400);
 
     const userdata = req.app.locals.db.collection('user_data');
-    return await userdata.findOne({ uuid: req.params.id }, { projection: { pass: 0 } }); // 프로필 공개 수준 설정 잇으면 좋을듯
+    res.send(await userdata.findOne({ uuid: req.params.id }, { projection: { pass: 0 } })); // 프로필 공개 수준 설정 잇으면 좋을듯
 }));
 
 // 프로필 수정
@@ -43,6 +43,8 @@ router.put('/:id', asynchandler(auther), asynchandler(async (req, res) => {
         .build();
 
     await userdata.findOneAndUpdate({ uuid: req.params.id }, newUser);
+
+    res.send(newUser);
 }));
 
 router.delete('/:id', (req, res) => {
