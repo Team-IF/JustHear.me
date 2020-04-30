@@ -43,7 +43,8 @@ async function init() {
             message = `${err.name}: ${err.message}`;
         }
 
-
+        if (!message || config.product)
+            message = 'internal server error';
 
         console.log(err);
 
