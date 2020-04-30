@@ -2,6 +2,7 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const uuid = require("../utils/uuid");
 
+
 const HttpError = require("../models/httperror").HttpError;
 const User = require("../models/user").User;
 const UserBuilder = require("../models/user").UserBuilder;
@@ -18,10 +19,11 @@ router.get('/:id', (req, res) => {
         throw new HttpError(400);
 
     const userdata = req.app.locals.db.collection('user_data');
-    return userdata.findOne({ uuid: req.body.uuid }, { projection: { pass: 0 } }); // 프로필 공개 수준 설정 잇으면 좋을듯
+    return userdata.findOne({ uuid: req.params.id }, { projection: { pass: 0 } }); // 프로필 공개 수준 설정 잇으면 좋을듯
 });
 
-router.put('/:id', (req, res) => {
+// 프로필 수정
+router.put('/:id', auther, (req, res) => {
 
 });
 
