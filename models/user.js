@@ -29,17 +29,23 @@ class User {
 
 class UserBuilder { // builder pattern of User class
     setUuid(uuid) {
+        if (!uuid)
+            return this;
         this.uuid = uuid;
         return this;
     }
 
     setUsername(username) {
+        if (!username)
+            return this;
         this.username = username;
         return this;
     }
 
     setEmail(email) {
-        if (email.match(emailreg))
+        if (!email)
+            return this;
+        else if (email.match(emailreg))
             this.email = email;
         else
             throw new Error("Invalid email format");
@@ -47,23 +53,27 @@ class UserBuilder { // builder pattern of User class
     }
 
     setEncryptedPassword(password) {
+        if (!password)
+            return this;
+
         this.password = password;
         return this;
     }
 
     setPhoneNumber(number) {
         if (!number)
-            this.number = undefined;
+            return this;
         else if (number.match(phonereg))
             this.phonenumber = number;
         else
             throw new Error("Invalid phone number format");
+
         return this;
     }
 
     setBirthday(bd) {
         if (!bd)
-            this.bd = undefined;
+            return this;
         else if (bd instanceof moment)
             this.birthday = bd.format('YYYY-MM-DD');
         else if (typeof (bd) === "string")
@@ -76,7 +86,7 @@ class UserBuilder { // builder pattern of User class
 
     setGender(g) {
         if (!g)
-            this.gender = undefined;
+            return this;
         else if (typeof (g) === "string")
             this.gender = g;
         else
@@ -86,11 +96,15 @@ class UserBuilder { // builder pattern of User class
     }
 
     setProfileImg(p) {
+        if (!p)
+            return this;
         this.profileimg = p;
         return this;
     }
 
     setProfileMusic(p) {
+        if (!p)
+            return this;
         this.profilemusic = p;
         return this;
     }
