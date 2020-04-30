@@ -95,6 +95,20 @@ class UserBuilder { // builder pattern of User class
         return this;
     }
 
+    fromObj(obj) {
+        return this
+            .setBirthday(obj.birthday)
+            .setEmail(obj.email)
+            .setEncryptedPassword(obj.pass)
+            .setGender(obj.gender)
+            .setPhoneNumber(obj.phonenumber)
+            .setProfileImg(obj.profileImg)
+            .setProfileMusic(obj.profileMusic)
+            .setUsername(obj.username)
+            .setUuid(obj.uuid)
+            .build();
+    }
+
     build() {
         return new User(
             this.uuid,

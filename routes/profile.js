@@ -39,21 +39,10 @@ router.post('/registry', async (req, res) => {
         throw new HttpError(400, "이미 존재하는 이메일");
 
     // 비밀번호 해싱
-    let encPw = await bcrypt.hash(req.body.pass, bcryptSaltRounds);
+    req.body.pass = await bcrypt.hash(req.body.pass, bcryptSaltRounds);
 
-    let user = new UserBuilder()
-        .setUuid(uuid())
-        .setBirthday(req.body.birthday)
-        .setEmail(req.body.email)
-        .setGender(req.body.gender)
-        .setPhoneNumber(req.body.phonenumber)
-        .setProfileImg(req.body.profileImg)
-        .setProfileMusic(req.body.profileMusic)
-        .setUsername(req.body.username)
-        .setEncryptedPassword(encPw)
-        .build();
-
-    //console.log(user);
+    // 유저 객체 생성
+    const user = new UserBuilder().fromObj(req.body);
 
     // 디비 기록
     await userdata.insertOne(user);
