@@ -1,6 +1,6 @@
 const express = require("express");
 
-const HttpError = require("./models/httperror").HttpError;
+const HttpError = require("./models/httperror");
 const MongoClient = require('mongodb').MongoClient;
 
 const config = require('./config/config');
@@ -16,6 +16,7 @@ async function init() {
     });
     await dbclient.connect();
     app.locals.db = dbclient.db(config.db.dbname);
+    //app.locals.db = {};
     app.locals.config = config;
 
     console.log("Loading Modules...");
