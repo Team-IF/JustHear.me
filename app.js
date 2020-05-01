@@ -6,12 +6,14 @@ const MongoClient = require('mongodb').MongoClient;
 
 const config = require('./config/config');
 const app = express();
+let httpServer;
+let dbClient;
 
 async function init() {
     console.log("Connecting DB...");
 
     let dburl = `mongodb://${config.db.user}:${config.db.password}@${config.db.hostname}/${config.db.dbname}?authSource=admin&authMechanism=SCRAM-SHA-1`;
-    let dbclient = new MongoClient(dburl, {
+    dbclient = new MongoClient(dburl, {
         useNewUrlParser: true,
         useUnifiedTopology: true
     });
@@ -62,8 +64,29 @@ async function init() {
             });
     });
 
-    const httpServer = app.listen(config.port, config.host, () => console.log(`Listening on port ${config.port}...`));
+    httpServer = app.listen(config.port, config.host, () => console.log(`Listening on port ${config.port}...`));
+
+    // send ready signal to PM2 (Process Manager)
+    try {
+        process.send('ready');
+    } catch (e) {
+        console.log(e);
+    }
 };
+
+async function stopServer() {
+    console.log("Stopping server");
+
+    dbClient.close();
+    httpServer.close();
+
+    console.log("Stopped");
+}
+
+// process exit signal
+process.on('SIGINT', function () {
+    stopServer();
+});
 
 console.log("start JustHear.me server");
 init();
