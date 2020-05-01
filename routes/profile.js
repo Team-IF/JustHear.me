@@ -4,9 +4,8 @@ const uuid = require("../utils/uuid");
 const asynchandler = require("../utils/asynchandler");
 
 const auther = require("../middleware/auth");
-const HttpError = require("../models/httperror").HttpError;
-const User = require("../models/user").User;
-const UserBuilder = require("../models/user").UserBuilder;
+const HttpError = require("../models/httperror");
+const User = require("../models/user");
 
 const router = express.Router();
 
@@ -37,7 +36,7 @@ router.put('/:id', asynchandler(auther), asynchandler(async (req, res) => {
     if (!user)
         throw new HttpError(404, '해당 프로필을 찾을 수 없습니다.');
 
-    const newUser = new UserBuilder()
+    const newUser = new User.Builder()
         .fromObj(user)
         .fromObj(req.body)
         .build();
@@ -64,7 +63,9 @@ router.post('/registry', asynchandler(async (req, res) => {
     req.body.pass = await bcrypt.hash(req.body.pass, bcryptSaltRounds);
 
     // 유저 객체 생성
-    const user = new UserBuilder().fromObj(req.body);
+    const user = new User.Builder()
+        .fromObj(req.body)
+        .build();
 
     // 디비 기록
     await userdata.insertOne(user);

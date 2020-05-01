@@ -1,8 +1,7 @@
 const express = require("express");
 const asynchandler = require('../utils/asynchandler');
-const HttpError = require("../models/httperror").HttpError;
+const HttpError = require("../models/httperror")
 const router = express.Router();
-let db;
 
 router.use(express.json());
 
@@ -12,6 +11,11 @@ router.get('/echo', (req, res) => {
 
 router.post('/echo', (req, res) => {
     res.send(req.body);
+});
+
+router.get('/temp', (req, res) => {
+    const User = require("../models/user");
+    console.log(new User.Builder());
 });
 
 router.get('/dbtest', asynchandler(async (req, res) => {
