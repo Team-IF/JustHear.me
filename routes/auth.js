@@ -38,7 +38,7 @@ router.post('/refresh', asynchandler(async (req, res) => {
 }));
 
 router.get('/invalidate', asynchandler(auther), asynchandler(async (req, res) => {
-    if (!req.session)
+    if (!req.session || !req.session.checkValid())
         throw new HttpError(401, "로그인을 해주세요.");
 
     const oldtoken = req.session.accessToken;
