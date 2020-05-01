@@ -29,16 +29,14 @@ class User {
 
 class UserBuilder { // builder pattern of User class
     setUuid(uuid) {
-        if (!uuid)
-            return this;
-        this.uuid = uuid;
+        if (uuid)
+            this.uuid = uuid;
         return this;
     }
 
     setUsername(username) {
-        if (!username)
-            return this;
-        this.username = username;
+        if (username)
+            this.username = username;
         return this;
     }
 
@@ -53,10 +51,8 @@ class UserBuilder { // builder pattern of User class
     }
 
     setEncryptedPassword(password) {
-        if (!password)
-            return this;
-
-        this.password = password;
+        if (password)
+            this.password = password;
         return this;
     }
 
@@ -96,16 +92,14 @@ class UserBuilder { // builder pattern of User class
     }
 
     setProfileImg(p) {
-        if (!p)
-            return this;
-        this.profileimg = p;
+        if (p)
+            this.profileimg = p;
         return this;
     }
 
     setProfileMusic(p) {
-        if (!p)
-            return this;
-        this.profilemusic = p;
+        if (p)
+            this.profilemusic = p;
         return this;
     }
 
@@ -138,7 +132,6 @@ class UserBuilder { // builder pattern of User class
     }
 }
 
-module.exports = {
-    User: User,
-    UserBuilder: UserBuilder
-};
+User.Builder = UserBuilder;
+
+module.exports = User;
