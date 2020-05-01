@@ -1,4 +1,5 @@
 const express = require("express");
+const morgan = require("morgan");
 
 const HttpError = require("./models/httperror");
 const MongoClient = require('mongodb').MongoClient;
@@ -21,11 +22,15 @@ async function init() {
 
     console.log("Loading Modules...");
 
-    // test logger
-    app.use((req, res, next) => {
-        console.log(`${req.connection.remoteAddress} : ${req.path}`);
-        next();
-    });
+    // logger
+    app.use(morgan({
+        format: "short",
+        stream: {
+            write: (str) => {
+                console.log(str);
+            }
+        }
+    }));
 
     app.use('/auth', require('./routes/auth'));
     app.use('/profile', require('./routes/profile'));
