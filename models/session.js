@@ -16,11 +16,11 @@ class Session {
         return moment().isBefore(this.expireDate);
     }
 
-    static createNew(uuid) {
+    static createNew(useruuid) {
         const token = uuid();
         const exp = moment().add(14, "days");
 
-        return new Session(uuid, token, exp);
+        return new Session(useruuid, token, exp);
     }
 }
 
