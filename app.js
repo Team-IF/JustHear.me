@@ -4,7 +4,8 @@ const morgan = require("morgan");
 const HttpError = require("./models/httperror");
 const MongoClient = require('mongodb').MongoClient;
 
-const config = require('./config/config');
+const config = require('./configurator').config();
+
 const app = express();
 let httpServer;
 let dbClient;
@@ -12,14 +13,12 @@ let dbClient;
 async function init() {
     console.log("Connecting DB...");
 
-    let dburl = `mongodb://${config.db.user}:${config.db.password}@${config.db.hostname}/${config.db.dbname}?authSource=admin&authMechanism=SCRAM-SHA-1`;
-    dbclient = new MongoClient(dburl, {
+    dbclient = new MongoClient(config.dburl, {
         useNewUrlParser: true,
         useUnifiedTopology: true
     });
     await dbclient.connect();
-    app.locals.db = dbclient.db(config.db.dbname);
-    //app.locals.db = {};
+    app.locals.db = dbclient.db(config.dbname);
     app.locals.config = config;
 
     console.log("Loading Modules...");
@@ -88,5 +87,4 @@ process.on('SIGINT', function () {
     stopServer();
 });
 
-console.log("start JustHear.me server");
 init();
