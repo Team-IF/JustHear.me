@@ -9,10 +9,7 @@
             "request": "launch",
             "name": "프로그램 시작",
             "skipFiles": ["<node_internals>/**"],
-            "program": "${workspaceFolder}\\app.js",
-            "env": {
-                "NODE_ENV": "local"
-            }
+            "program": "${workspaceFolder}\\app.js"
         }
     ]
 }
