@@ -2,7 +2,7 @@ const express = require("express");
 const morgan = require("morgan");
 
 const HttpError = require("./models/httperror");
-const MongoClient = require('mongodb').MongoClient;
+const mongoose = require('mongoose');
 
 const config = require('./configurator').config();
 
@@ -13,12 +13,11 @@ let dbClient;
 async function init() {
     console.log("Connecting DB...");
 
-    dbclient = new MongoClient(config.dburl, {
+    dbclient = await mongoose.connect(config.dburl, {
         useNewUrlParser: true,
         useUnifiedTopology: true
     });
-    await dbclient.connect();
-    app.locals.db = dbclient.db(config.dbname);
+    app.locals.db = dbclient;
     app.locals.config = config;
 
     console.log("Loading Modules...");
@@ -33,6 +32,7 @@ async function init() {
         }
     }));
 
+    // routes
     app.use('/auth', require('./routes/auth'));
     app.use('/profile', require('./routes/profile'));
     app.use('/test', require('./routes/test'));

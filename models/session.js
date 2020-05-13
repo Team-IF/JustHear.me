@@ -1,27 +1,42 @@
 const moment = require('moment');
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 const uuid = require('../utils/uuid');
 
-class Session {
-    constructor(uuid, token, expireDate) {
-        this.uuid = uuid;
-        this.accessToken = token;
-
-        if (expireDate instanceof moment)
-            this.expireDate = expireDate;
-        else
-            this.expireDate = moment(expireDate);
+const sessionSchema = new Schema({
+    userId: {
+        type: String,
+        required: true
+    },
+    accessToken: {
+        type: String,
+        required: true
+    },
+    expireDate: {
+        type: Date,
+        required: true
     }
+});
 
-    checkValid() {
-        return moment().isBefore(this.expireDate);
-    }
-
-    static createNew(useruuid) {
-        const token = uuid();
-        const exp = moment().add(14, "days");
-
-        return new Session(useruuid, token, exp);
-    }
+sessionSchema.methods.checkValidation = function () {
+    return moment().isBefore(this.expireDate);
 }
+
+sessionSchema.methods.findByToken = function (token) {
+    return this.find({ accessToken: token });
+}
+
+sessionSchema.statics.createNew = function (userid) {
+    const token = uuid();
+    const exp = moment().add(14, "days").toDate();
+
+    return new Session({
+        userId: userid,
+        accessToken: token,
+        expireDate = exp
+    });
+}
+
+const Session = mongoose.model('Session', sessionSchema);
 
 module.exports = Session;
