@@ -33,7 +33,14 @@ const userSchema = new Schema({
     birthday: Date,
     password: String,
     profileImg: String,
-    profileMusic: String
+    profileMusic: String,
+    createdAt: Date,
+    updatedAt: Date
+}, {
+    timestamps: {
+        createdAt: 'createdAt',
+        updatedAt: 'updatedAt'
+    }
 });
 
 userSchema.methods.comparePassword = function (plainPassword) {
