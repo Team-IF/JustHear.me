@@ -1,13 +1,9 @@
-const express = require("express");
-
-const moment = require('moment');
-const bcrypt = require('bcrypt');
-const HttpError = require("../models/httperror");
+const express = require('express');
+const HttpError = require('../models/httperror');
 const Session = require('../models/session');
-const User = require("../models/user");
-const uuid = require("../utils/uuid");
-const asynchandler = require("../utils/asynchandler");
-const auther = require("../middleware/auth");
+const User = require('../models/user');
+const asynchandler = require('../utils/asynchandler');
+const auther = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -15,12 +11,12 @@ router.use(express.json());
 
 router.post('/login', asynchandler(async (req, res) => {
     if (!req.body.email || !req.body.pass)
-        throw new HttpError(400, "이메일과 비밀번호를 입력해 주세요.");
+        throw new HttpError(400, '이메일과 비밀번호를 입력해 주세요.');
 
-    const user = await User.findById(req.body.email);
+    const user = await User.findByEmail(req.body.email).exec();
 
     if (!user || !user.comparePassword(req.body.pass))
-        throw new HttpError(403, "잘못된 이메일/비밀번호");
+        throw new HttpError(403, '잘못된 이메일/비밀번호');
 
     const session = Session.createNew(user._id);
     await session.save();
@@ -37,10 +33,10 @@ router.post('/refresh', asynchandler(async (req, res) => {
 
 router.get('/invalidate', asynchandler(auther), asynchandler(async (req, res) => {
     if (!req.session || !req.session.checkValidation())
-        throw new HttpError(401, "로그인을 해주세요.");
+        throw new HttpError(401, '로그인을 해주세요.');
 
     const oldtoken = req.session.accessToken;
-    await Session.deleteMany({ accessToken: oldtoken });
+    await Session.deleteMany({ accessToken: oldtoken }).exec();
 
     res.status(204).send('');
 }));
