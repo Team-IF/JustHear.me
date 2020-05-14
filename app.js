@@ -1,7 +1,7 @@
-const express = require("express");
-const morgan = require("morgan");
+const express = require('express');
+const morgan = require('morgan');
 
-const HttpError = require("./models/httperror");
+const HttpError = require('./models/httperror');
 const mongoose = require('mongoose');
 
 const config = require('./configurator').config();
@@ -11,20 +11,19 @@ let httpServer;
 let dbClient;
 
 async function init() {
-    console.log("Connecting DB...");
+    console.log('Connecting DB...');
 
-    dbclient = await mongoose.connect(config.dburl, {
+    dbClient = await mongoose.connect(config.dburl, {
         useNewUrlParser: true,
         useUnifiedTopology: true
     });
-    app.locals.db = dbclient;
     app.locals.config = config;
 
-    console.log("Loading Modules...");
+    console.log('Loading Modules...');
 
     // logger
     app.use(morgan({
-        format: "short",
+        format: 'short',
         stream: {
             write: (str) => {
                 console.log(str);
@@ -35,6 +34,7 @@ async function init() {
     // routes
     app.use('/auth', require('./routes/auth'));
     app.use('/profile', require('./routes/profile'));
+    app.use('/hear', require('./routes/hear'));
     app.use('/test', require('./routes/test'));
 
     // error handler
@@ -71,15 +71,15 @@ async function init() {
     } catch (e) {
         console.log(e);
     }
-};
+}
 
 async function stopServer() {
-    console.log("Stopping server");
+    console.log('Stopping server');
 
     dbClient.close();
     httpServer.close();
 
-    console.log("Stopped");
+    console.log('Stopped');
 }
 
 // process exit signal
