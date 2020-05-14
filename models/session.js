@@ -1,5 +1,5 @@
 const moment = require('moment');
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const uuid = require('../utils/uuid');
 
@@ -20,22 +20,22 @@ const sessionSchema = new Schema({
 
 sessionSchema.methods.checkValidation = function () {
     return moment().isBefore(this.expireDate);
-}
+};
 
-sessionSchema.methods.findByToken = function (token) {
-    return this.find({ accessToken: token });
-}
+sessionSchema.statics.findByToken = function (token) {
+    return this.findOne({ accessToken: token });
+};
 
 sessionSchema.statics.createNew = function (userid) {
     const token = uuid();
-    const exp = moment().add(14, "days").toDate();
+    const exp = moment().add(14, 'days').toDate();
 
     return new Session({
         userId: userid,
         accessToken: token,
-        expireDate = exp
+        expireDate: exp
     });
-}
+};
 
 const Session = mongoose.model('Session', sessionSchema);
 

@@ -1,5 +1,5 @@
-const bcrypt = require("bcrypt");
-const mongoose = require("mongoose");
+const bcrypt = require('bcrypt');
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const bcryptSaltRounds = 10;
@@ -28,7 +28,7 @@ const userSchema = new Schema({
     },
     gender: {
         type: String,
-        enum: [M, F] // 중성? 추가필요?
+        enum: ['M', 'F'] // 중성? 추가필요?
     },
     birthday: Date,
     password: String,
@@ -44,16 +44,16 @@ const userSchema = new Schema({
 });
 
 userSchema.methods.comparePassword = function (plainPassword) {
-    return bcrypt.compare(plainPassword, this.password)
-}
+    return bcrypt.compare(plainPassword, this.password);
+};
 
 userSchema.methods.savePassword = async function (plainPassword) {
     this.password = await bcrypt.hash(plainPassword, bcryptSaltRounds);
-}
+};
 
 userSchema.statics.findByEmail = function (email) {
-    return this.find({ email: id });
-}
+    return this.findOne({ email: email });
+};
 
 const User = mongoose.model('User', userSchema);
 
