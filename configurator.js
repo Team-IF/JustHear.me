@@ -1,4 +1,4 @@
-const fs = require("fs");
+const fs = require('fs');
 
 function config() {
     if (!process.env.NODE_ENV)
@@ -14,12 +14,12 @@ function config() {
         const dotenvResult = require('dotenv').config({ path: dotenvPath });
 
         if (dotenvResult.error) {
-            console.log("Dotenv error :");
+            console.log('Dotenv error :');
             console.log(dotenvResult.error);
         }
     }
     else
-        console.log("Use Environment Variables");
+        console.log('Use Environment Variables');
 
     return {
         host: process.env.host,
