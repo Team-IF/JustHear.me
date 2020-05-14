@@ -21,7 +21,7 @@ router.get('/:id', asynchandler(async (req, res) => {
 
 // 프로필 수정
 router.put('/:id', asynchandler(auther), asynchandler(async (req, res) => {
-    if (!req.session || !req.session.checkValid())
+    if (!req.session || !req.session.checkValidation())
         throw new HttpError(401, '로그인을 해주세요.');
 
     if (req.session.uuid !== req.params.id)

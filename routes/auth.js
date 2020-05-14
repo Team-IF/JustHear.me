@@ -23,7 +23,7 @@ router.post('/login', asynchandler(async (req, res) => {
         throw new HttpError(403, "잘못된 이메일/비밀번호");
 
     const session = Session.createNew(user._id);
-    session.save();
+    await session.save();
 
     res.send({
         token: session.accessToken,
@@ -36,7 +36,7 @@ router.post('/refresh', asynchandler(async (req, res) => {
 }));
 
 router.get('/invalidate', asynchandler(auther), asynchandler(async (req, res) => {
-    if (!req.session || !req.session.checkValid())
+    if (!req.session || !req.session.checkValidation())
         throw new HttpError(401, "로그인을 해주세요.");
 
     const oldtoken = req.session.accessToken;
