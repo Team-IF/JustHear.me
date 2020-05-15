@@ -15,7 +15,7 @@ router.post('/login', asynchandler(async (req, res) => {
 
     const user = await User.findByEmail(req.body.email).exec();
 
-    if (!user || !user.comparePassword(req.body.pass))
+    if (!user || !await user.comparePassword(req.body.pass))
         throw new HttpError(403, '잘못된 이메일, 비밀번호');
 
     const session = Session.createNew(user._id);
