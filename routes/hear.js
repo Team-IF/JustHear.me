@@ -11,14 +11,14 @@ router.use(formidable());
 router.get('/read/:id', asynchandler(async (req, res) => {
     const hear = await Hear.findById(req.params.id).exec();
     if (!hear)
-        throw new HttpErorr(404, '존재하지 않는 글');
+        throw HttpErorr.NotFound;
 
     res.send(hear);
 }));
 
 router.post('/upload', asynchandler(auther), asynchandler(async (req, res) => {
     if (!req.session || !req.session.checkValidation())
-        throw new HttpErorr(401, '로그인을 해주세요.');
+        throw HttpErorr.Unauthorized;
 
     const hear = new Hear({
         userId: req.session.userId,

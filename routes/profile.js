@@ -12,27 +12,27 @@ router.use(express.json());
 // UUID 로 프로필 찾기
 router.get('/view/:id', asynchandler(async (req, res) => {
     if (!req.params.id)
-        throw new HttpError(400, '잘못된 접근');
+        throw HttpError.BadRequest;
 
     let user = await User.findById(req.params.id).exec();
     if (user)
         res.send(user.toJSON()); // 프로필 공개 수준 설정 잇으면 좋을듯
     else
-        throw new HttpError(404, '해당 프로필을 찾을 수 없습니다.');
+        throw HttpError.NotFound;
 }));
 
 // 프로필 수정
 router.put('/edit/:id', asynchandler(auther), asynchandler(async (req, res) => {
     if (!req.session || !req.session.checkValidation())
-        throw new HttpError(401, '로그인을 해주세요.');
+        throw HttpError.Unauthorized;
 
     if (req.session.uuid !== req.params.id)
-        throw new HttpError(403, '자신의 프로필만 수정할 수 있습니다.');
+        throw HttpError.Forbidden;
 
     const user = await User.findById(req.session.uuid).exec();
 
     if (!user)
-        throw new HttpError(404, '해당 프로필을 찾을 수 없습니다.');
+        throw HttpError.NotFound;
 
     await user.updateOne(req.body, { omitUndefined: true });
     res.send(user.toJSON());
