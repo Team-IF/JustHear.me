@@ -33,10 +33,26 @@ router.post('/upload', asynchandler(auther), asynchandler(async (req, res) => {
     });
 }));
 
-router.get('/edit/:id', asynchandler(auther), asynchandler(async (req, res) => {
+router.post('/edit/:id', asynchandler(auther), asynchandler(async (req, res) => {
+    const hear = await Hear.findById(req.params.id).exec();
+    if (!hear)
+        throw HttpError.NotFound;
+
     if (!req.session || !req.session.checkValidation())
         throw HttpError.Unauthorized;
 
+    if (hear.userId !== req.session.userId)
+        throw HttpError.Forbidden;
+
+    await hear.updateOne({
+        title: req.fields.title,
+        content: req.fields.content
+    });
+
+    res.send({
+        result: true,
+        _id: hear._id
+    });
 }));
 
 module.exports = router;
