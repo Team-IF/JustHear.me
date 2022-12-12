@@ -2,7 +2,7 @@
   "dependencies": {
     "bcrypt": "^5.0.0",
     "dotenv": "^8.2.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-formidable": "^1.2.0",
     "moment": "^2.24.0",
     "mongoose": "^5.9.12",
